@@ -10,10 +10,12 @@ Módulo que implementa el TAD Estado
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct _Estado Estado;
+
 typedef enum {
-    INICIAL, fINAL, NORMAL
+    INICIAL, FINAL, NORMAL
 } TIPO;
 
 /** Funciones */
@@ -32,5 +34,6 @@ TIPO get_tipo_estado(Estado *estado);
 
 /** Función que nos facilitará la impresión de un estado*/
 void print_estado(Estado *estado);
+
 
 #endif

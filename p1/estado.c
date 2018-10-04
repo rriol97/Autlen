@@ -9,9 +9,23 @@ Módulo que implementa el TAD Estado
 /** Estructura de estado*/
 struct _Estado {
     char *nombre;
-    int number;
     TIPO tipo;
 };
+
+/** Funciones privadas */
+char* texto_enum(TIPO t) {
+	if (t == INICIAL){
+		return "Inicial";
+	}
+
+	else if (t == FINAL){
+		return "Final";
+	}
+
+	else{
+		return "NORMAL";
+	}
+}
 
 /** Funciones a implementar */
 Estado* estado_create(char *nombre, TIPO tipo) {
@@ -21,7 +35,18 @@ Estado* estado_create(char *nombre, TIPO tipo) {
 		return NULL;
 	}
 
-	estado = (Estado*) malloc (sizeof(Estado)); /**Reservamos memoria para un estado*/
+	estado = (Estado*) malloc(sizeof(Estado)); /**Reservamos memoria para un estado*/
+	if (!estado){
+		printf("Error reservando memoria para estado\n");
+		return NULL;
+	}
+
+	estado->nombre = (char*) malloc(sizeof(char)*strlen(nombre) + 1);
+	if (!estado->nombre){
+		printf("Error reservando memoria para nombre de un estado\n");
+		free(estado);
+		return NULL;
+	}
 
 	strcpy(estado->nombre, nombre);
 	estado->tipo = tipo;
@@ -35,6 +60,7 @@ void estado_destroy(Estado *estado){
 		return;
 	}
 
+	free(estado->nombre);
 	free(estado);
 	return;
 }
@@ -51,7 +77,7 @@ char* get_name_estado(Estado* estado){
 TIPO get_tipo_estado(Estado *estado){
 
 	if (!estado){
-		return NULL;
+		return -1;
 	}
 
 	return estado->tipo;	
@@ -60,8 +86,9 @@ TIPO get_tipo_estado(Estado *estado){
 void print_estado(Estado *estado){
 
 	if (!estado){
-		return NULL;
+		return;
 	}
 
-	return estado->tipo;	
+	printf("Nombre: %s\nTipo: %s\n", estado->nombre, texto_enum(estado->tipo));
+	return;
 }	
