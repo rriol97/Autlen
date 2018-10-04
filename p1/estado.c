@@ -37,13 +37,11 @@ Estado* estado_create(char *nombre, TIPO tipo) {
 
 	estado = (Estado*) malloc(sizeof(Estado)); /**Reservamos memoria para un estado*/
 	if (!estado){
-		printf("Error reservando memoria para estado\n");
 		return NULL;
 	}
 
-	estado->nombre = (char*) malloc(sizeof(char)*strlen(nombre) + 1);
+	estado->nombre = (char*) malloc(sizeof(char) * strlen(nombre) + 1);
 	if (!estado->nombre){
-		printf("Error reservando memoria para nombre de un estado\n");
 		free(estado);
 		return NULL;
 	}
