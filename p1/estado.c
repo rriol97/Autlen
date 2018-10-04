@@ -18,12 +18,16 @@ char* texto_enum(TIPO t) {
 		return "Inicial";
 	}
 
-	else if (t == FINAL){
+	else if (t == FINAL) {
 		return "Final";
 	}
 
-	else{
+	else if (t == NORMAL) {
 		return "NORMAL";
+	}
+
+	else {
+		return "INICIAL_Y_FINAL";
 	}
 }
 

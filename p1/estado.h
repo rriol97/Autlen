@@ -15,7 +15,7 @@ Módulo que implementa el TAD Estado
 typedef struct _Estado Estado;
 
 typedef enum {
-    INICIAL, FINAL, NORMAL
+    INICIAL, FINAL, NORMAL, INICIAL_y_FINAL
 } TIPO;
 
 /** Funciones */
