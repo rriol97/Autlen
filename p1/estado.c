@@ -1,3 +1,9 @@
+/* ===================================================================
+File: estado.c
+Authors:Ricardo Riol, Francisco de Vicente Lana
+
+Módulo que implementa el TAD Estado
+=================================================================== */
 #include "estado.h"
 
 /** Estructura de estado*/
@@ -35,4 +41,27 @@ void estado_destroy(Estado *estado){
 
 char* get_name_estado(Estado* estado){
 
+	if (!estado){
+		return NULL;
+	}
+
+	return estado->nombre;
 }
+
+TIPO get_tipo_estado(Estado *estado){
+
+	if (!estado){
+		return NULL;
+	}
+
+	return estado->tipo;	
+}
+
+void print_estado(Estado *estado){
+
+	if (!estado){
+		return NULL;
+	}
+
+	return estado->tipo;	
+}	
