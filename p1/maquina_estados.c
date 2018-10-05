@@ -5,13 +5,13 @@ Authors:Ricardo Riol, Francisco de Vicente Lana
 Main de prueba
 =================================================================== */
 #include "estado.h"
-#include "alfabeto.h"
+#include "conjunto_simbolos.h"
 #include <stdio.h>
 
 
 int main(){
 	Estado *estado = NULL;
-	Alfabeto *alfabeto = NULL;
+	Conjunto_simbolos *conjunto_simbolos = NULL;
 
 	printf("------------------------------------\n");
 
@@ -21,15 +21,21 @@ int main(){
 
 	printf("------------------------------------\n");
 
-	alfabeto = alfabeto_create();
-	insertar_simbolo(alfabeto, "hola");
-	insertar_simbolo(alfabeto, "ricardo");
-	insertar_simbolo(alfabeto, "funciona");
-	insertar_simbolo(alfabeto, "bien");
+	conjunto_simbolos = conjunto_simbolos_create("Cadeno");
+	insert_simbolo(conjunto_simbolos, "hola");
+	insert_simbolo(conjunto_simbolos, "ricardo");
+	insert_simbolo(conjunto_simbolos, "funciona");
+	insert_simbolo(conjunto_simbolos, "bien");
 
-	printf("Num_elementos: %d\n", get_num_simbolos(alfabeto));
-	print_alfabeto(alfabeto);
-	alfabeto_destroy(alfabeto);
+	printf("-----------Comparaciones --------\n");
+	printf("%d\n", is_in_conjunto_simbolos(conjunto_simbolos, "ricardo"));
+	printf("%d\n", is_in_conjunto_simbolos(conjunto_simbolos, "eoeoe"));
+
+	printf("Num_elementos: %d\n", get_num_simbolos(conjunto_simbolos));
+	print_conjunto_simbolos(conjunto_simbolos);
+	conjunto_simbolos_destroy(conjunto_simbolos);
+
+	printf("------------------------------------\n");
 
 	return 0;
 

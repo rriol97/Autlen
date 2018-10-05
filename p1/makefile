@@ -27,7 +27,7 @@ DEPS = $(shell echo $(SOURCES) | sed -e 's:\.c[p]*:\.d:g')
 
 all:	maquina_estados
 
-maquina_estados:	estado.o alfabeto.o maquina_estados.o
+maquina_estados:	estado.o conjunto_simbolos.o maquina_estados.o
 
 # receta para hacer un .d (dependencias automaticas de tipo .h para tus .o)
 %.d : %.c
