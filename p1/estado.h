@@ -35,5 +35,7 @@ TIPO get_tipo_estado(Estado *estado);
 /** Función que nos facilitará la impresión de un estado*/
 void print_estado(Estado *estado);
 
+/*Funcion que compara dos estados: devuelve 1 si son iguales y 0 en caso contrario**/
+int estado_equal(Estado *estado1, Estado *estado2);
 
 #endif

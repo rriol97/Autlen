@@ -94,3 +94,17 @@ void print_estado(Estado *estado){
 	printf("Nombre: %s\nTipo: %s\n", estado->nombre, texto_enum(estado->tipo));
 	return;
 }	
+
+/*Funcion que compara dos estados: devuelve 1 si son iguales y 0 en caso contrario**/
+int estado_equal(Estado *estado1, Estado *estado2){
+
+	if (!estado1 || !estado2){
+		return -1;
+	}
+
+	if (estado1->tipo == estado2->tipo && strcmp(estado1->nombre, estado2->nombre)== 0){
+		return 1;
+	}
+
+	return 0;
+}

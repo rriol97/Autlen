@@ -4,39 +4,53 @@ Authors:Ricardo Riol, Francisco de Vicente Lana
 
 Main de prueba
 =================================================================== */
+#include <stdio.h>
 #include "estado.h"
 #include "conjunto_simbolos.h"
-#include <stdio.h>
+#include "transicion.h"
 
 
-int main(){
-	Estado *estado = NULL;
+
+int main() {
+	Estado *estado1 = NULL;
+	Estado *estado2 = NULL;
 	Conjunto_simbolos *conjunto_simbolos = NULL;
+	Transicion *transicion = NULL;
 
-	printf("------------------------------------\n");
+	printf("---------------EASTADO---------------------\n");
 
-	estado = estado_create("ricardo", NORMAL);
-	print_estado(estado);
-	estado_destroy(estado);
+	estado1 = estado_create("ricardo", NORMAL);
+	print_estado(estado1);
 
-	printf("------------------------------------\n");
+	estado2= estado_create("Paco", FINAL);
+	print_estado(estado2);
 
-	conjunto_simbolos = conjunto_simbolos_create("Cadeno");
-	insert_simbolo(conjunto_simbolos, "hola");
-	insert_simbolo(conjunto_simbolos, "ricardo");
-	insert_simbolo(conjunto_simbolos, "funciona");
-	insert_simbolo(conjunto_simbolos, "bien");
+	printf("--------------CONJUNTOS DE SIMBOLOS---------------------\n");
+
+	conjunto_simbolos = conjunto_simbolos_create("A");
+	insert_simbolo(conjunto_simbolos, "a");
+	insert_simbolo(conjunto_simbolos, "b");
+	insert_simbolo(conjunto_simbolos, "c");
+	insert_simbolo(conjunto_simbolos, "d");
 
 	printf("-----------Comparaciones --------\n");
-	printf("%d\n", is_in_conjunto_simbolos(conjunto_simbolos, "ricardo"));
-	printf("%d\n", is_in_conjunto_simbolos(conjunto_simbolos, "eoeoe"));
+	printf("%d\n", is_in_conjunto_simbolos(conjunto_simbolos, "a"));
+	printf("%d\n", is_in_conjunto_simbolos(conjunto_simbolos, "f"));
 
 	printf("Num_elementos: %d\n", get_num_simbolos(conjunto_simbolos));
 	print_conjunto_simbolos(conjunto_simbolos);
+
+
+	printf("-------------------TRANSICIONES-----------------\n");
+	transicion = transicion_create(estado2, "a");
+	transicion_print(transicion);
+
+
+
 	conjunto_simbolos_destroy(conjunto_simbolos);
-
-	printf("------------------------------------\n");
-
+	estado_destroy(estado1);
+	estado_destroy(estado2);
+	transicion_destroy(transicion);
 	return 0;
 
 }
