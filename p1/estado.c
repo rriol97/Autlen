@@ -8,6 +8,7 @@ Módulo que implementa el TAD Estado
 
 /** Estructura de estado*/
 struct _Estado {
+	int id;
     char *nombre;
     TIPO tipo;
 };
@@ -32,7 +33,7 @@ char* texto_enum(TIPO t) {
 }
 
 /** Funciones a implementar */
-Estado* estado_create(char *nombre, TIPO tipo) {
+Estado* estado_create(char *nombre, TIPO tipo, int id) {
 	Estado *estado = NULL;
 
 	if (!nombre) {
@@ -52,6 +53,7 @@ Estado* estado_create(char *nombre, TIPO tipo) {
 
 	strcpy(estado->nombre, nombre);
 	estado->tipo = tipo;
+	estado->id = id;
 
 	return estado;
 }
@@ -95,6 +97,15 @@ void print_estado(Estado *estado){
 	return;
 }	
 
+TIPO get_id_estado(Estado *estado){
+
+	if (!estado){
+		return -1;
+	}
+
+	return estado->id;	
+}
+
 /*Funcion que compara dos estados: devuelve 1 si son iguales y 0 en caso contrario**/
 int estado_equal(Estado *estado1, Estado *estado2){
 
@@ -102,7 +113,7 @@ int estado_equal(Estado *estado1, Estado *estado2){
 		return -1;
 	}
 
-	if (estado1->tipo == estado2->tipo && strcmp(estado1->nombre, estado2->nombre)== 0){
+	if (estado1->id == estado2->id){
 		return 1;
 	}
 

@@ -2,7 +2,7 @@
 File: transicion.c
 Authors:Ricardo Riol, Francisco de Vicente Lana
 
-Módulo que implementa el TAD Transicion.
+Módulo que implementa el TAD Transicion. Se implementa como una tabla.
 =================================================================== */
 
 #include "transicion.h"
@@ -10,95 +10,144 @@ Módulo que implementa el TAD Transicion.
 
 /** Estructura de estado*/
 struct _Transicion {
-	Estado *estado_inicial;
-	Estado *estado_final;
-	char *valor;
+	int ***transiciones;
+	int dim_matriz;
+	int num_tablas;
 };
 
 /** Funciones */
 
 /**Creamos e inicializamos una transicion nueva*/
-Transicion* transicion_create(Estado *estado_inicial, Estado *estado_final, char *valor){
-	Transicion *transicion = NULL;
+Transicion* transicion_create(int num_simb, int num_estados) {
+	int i, k, j;
+	Transicion *trans = NULL;
 
-	if(!estado_final || !estado_inicial) {
+	if (num_estados == 0 || num_simb == 0) {
 		return NULL;
 	}
 
-	transicion = (Transicion*) malloc(sizeof(Transicion));
+	trans = (Transicion*) malloc (sizeof(Transicion));
 
-	if(!transicion) {
+	if(!trans) {
 		return NULL;
 	}
 
-	transicion->valor = (char*) malloc(sizeof(char) * strlen(valor) + 1);
+	trans->transiciones = (int***) malloc(sizeof(int**) * num_simb);
 
-	if (!transicion->valor){
-		free(transicion);
+	if (!trans->transiciones){
+		free(trans);
 		return NULL;
 	}
 
-	transicion->estado_inicial = estado_inicial;
-	transicion->estado_final = estado_final;
-	strcpy(transicion->valor, valor);
+	for(i = 0; i < num_simb; i++){
+		trans->transiciones[i] = (int**) malloc(sizeof(int*) * num_estados);
 
-	return transicion;
+		if (!trans->transiciones[i]) {
+			for (k = 0; k < i; k++){
+					free(trans->transiciones[k]);
+			}
+			return NULL;
+		}
+
+	}
+
+	for (k = 0; k < num_simb; k++) {
+		for (i = 0; i < num_estados; i++) {
+			trans->transiciones[k][i] = (int*) malloc(sizeof(int) * num_estados);
+
+			if (!trans->transiciones[k][i]) {
+
+				for (k = 0; k < num_simb; k++) {
+					for (j = 0; j < i; j++) {
+						free(trans->transiciones[k][j]);
+					}
+			
+				}
+
+				return NULL;	
+			}	
+		}
+	}
+	
+	/** Inicializamos el la estrcutura de transicion*/
+
+	trans->dim_matriz = num_estados;
+	trans->num_tablas = num_simb;
+
+	for (k = 0; k < num_simb; k++) {
+		for (i = 0; i < num_estados; i++) {
+			for (j = 0; j < num_estados; j++) {
+				trans->transiciones[k][i][j] = 0;
+			}
+		}
+	}
+
+	return trans;
+
 }
 
-/**Liberamos la memoria de una transicion*/
+/** Liberamos la memoria de una transicion*/
 void transicion_destroy(Transicion *transicion) {
+	int i,k;
 
-	if(!transicion) {
+	if (!transicion) {
 		return;
 	}
 
-	free(transicion->valor);
+	for (k = 0; k < transicion->num_tablas; k++) {
+		for (i = 0; i < transicion->dim_matriz; i++) {
+			free(transicion->transiciones[k][i]);
+		}
+	}
+
+	for(k = 0; k < transicion->num_tablas; k++) {
+		free(transicion->transiciones[k]);
+	}
+
+	free(transicion->transiciones);
 	free(transicion);
+
 	return;
 }
 
-/** Obtenemos el estado final de la transicion*/
-Estado* transicion_get_estado_inicial(Transicion *transicion) {
+/**Obtenemos el valor de la transicion*/
+int get_valor_transicion(Transicion *trans, int simbolo, int estado1, int estado2){
 
-	if(!transicion) {
-		return NULL;
+	if (simbolo < 0 || simbolo >= trans->num_tablas || estado1 < 0 || estado1 >=trans->dim_matriz || estado2 < 0 || estado2 >=trans->dim_matriz) {
+		return -1;
 	}
 
-	return transicion->estado_inicial;
+	return trans->transiciones[simbolo][estado1][estado2];
 
 }
 
-/** Obtenemos el estado final de la transicion*/
-Estado* transicion_get_estado_final(Transicion *transicion) {
+/**Obtenemos el valor de la transicion*/
+void set_valor_transicion(Transicion *trans, int simbolo, int estado1, int estado2){
 
-	if(!transicion) {
-		return NULL;
+	if (simbolo < 0 || simbolo >= trans->num_tablas || estado1 < 0 || estado1 >=trans->dim_matriz || estado2 < 0 || estado2 >=trans->dim_matriz) {
+		return;
 	}
 
-	return transicion->estado_final;
+	trans->transiciones[simbolo][estado1][estado2] = 1;
+
+	return;
 
 }
 
-/**Obtenemos el valor del alfabeto que determina la transicion*/
-char* transicion_get_valor(Transicion *transicion) {
+/**Imprimir tabla de simbolos*/
+void transicion_print(Transicion *transicion){
+	int i,j,k;
 
-	if(!transicion) {
-		return NULL;
-	}
+	for (k = 0; k < transicion->num_tablas; k++) {
+		printf("Tabla del simbolo %d\n", k);
+		for (i = 0; i < transicion->dim_matriz; i++){
+			for (j = 0; j < transicion->dim_matriz; j++){
+				printf("%d", transicion->transiciones[k][i][j]);;
+			}
 
-	return transicion->valor;
-}
-
-/**Imprimir una transicion*/
-void transicion_print(Transicion *transicion) {
-
-	if(!transicion) {
-		return ;
-	}
-
-	print_estado(transicion_get_estado_inicial(transicion));
-	print_estado(transicion_get_estado_final(transicion));
-	printf("%s\n", transicion_get_valor(transicion));
+			printf("\n");
+		}
+	}	
 
 	return;
 }
