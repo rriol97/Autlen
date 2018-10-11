@@ -18,13 +18,16 @@ typedef struct _Transicion Transicion;
 /** Funciones */
 
 /**Creamos e inicializamos una transicion nueva*/
-Transicion* transicion_create(Estado *estado, char *valor);
+Transicion* transicion_create(Estado *estado_inicial, Estado *estado_final, char *valor);
 
 /**Liberamos la memoria de una transicion*/
 void transicion_destroy(Transicion *transicion);
 
 /** Obtenemos el estado final de la transicion*/
-Estado* transicion_get_estado(Transicion *transicion);
+Estado* transicion_get_estado_inicial(Transicion *transicion);
+
+/** Obtenemos el estado final de la transicion*/
+Estado* transicion_get_estado_final(Transicion *transicion);
 
 /**Obtenemos el valor del alfabeto que determina la transicion*/
 char* transicion_get_valor(Transicion *transicion);

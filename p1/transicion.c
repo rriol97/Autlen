@@ -10,17 +10,18 @@ Módulo que implementa el TAD Transicion.
 
 /** Estructura de estado*/
 struct _Transicion {
-	Estado *estado;
+	Estado *estado_inicial;
+	Estado *estado_final;
 	char *valor;
 };
 
 /** Funciones */
 
 /**Creamos e inicializamos una transicion nueva*/
-Transicion* transicion_create(Estado *estado, char *valor){
+Transicion* transicion_create(Estado *estado_inicial, Estado *estado_final, char *valor){
 	Transicion *transicion = NULL;
 
-	if(!estado) {
+	if(!estado_final || !estado_inicial) {
 		return NULL;
 	}
 
@@ -37,7 +38,8 @@ Transicion* transicion_create(Estado *estado, char *valor){
 		return NULL;
 	}
 
-	transicion->estado = estado;
+	transicion->estado_inicial = estado_inicial;
+	transicion->estado_final = estado_final;
 	strcpy(transicion->valor, valor);
 
 	return transicion;
@@ -56,13 +58,24 @@ void transicion_destroy(Transicion *transicion){
 }
 
 /** Obtenemos el estado final de la transicion*/
-Estado* transicion_get_estado(Transicion *transicion) {
+Estado* transicion_get_estado_inicial(Transicion *transicion) {
 
 	if(!transicion) {
 		return NULL;
 	}
 
-	return transicion->estado;
+	return transicion->estado_inicial;
+
+}
+
+/** Obtenemos el estado final de la transicion*/
+Estado* transicion_get_estado_final(Transicion *transicion) {
+
+	if(!transicion) {
+		return NULL;
+	}
+
+	return transicion->estado_final;
 
 }
 
@@ -83,7 +96,8 @@ void transicion_print(Transicion *transicion) {
 		return ;
 	}
 
-	print_estado(transicion_get_estado(transicion));
+	print_estado(transicion_get_estado_inicial(transicion));
+	print_estado(transicion_get_estado_final(transicion));
 	printf("%s\n", transicion_get_valor(transicion));
 
 	return;

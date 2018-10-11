@@ -42,7 +42,7 @@ int main() {
 
 
 	printf("-------------------TRANSICIONES-----------------\n");
-	transicion = transicion_create(estado2, "a");
+	transicion = transicion_create(estado1, estado2, "a");
 	transicion_print(transicion);
 
 
