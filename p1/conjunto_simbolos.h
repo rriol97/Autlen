@@ -17,7 +17,7 @@ typedef struct _Conjunto_simbolos Conjunto_simbolos;
 /** Funciones */
 
 /**Creamos e inicializamos un conjunto nuevo*/
-Conjunto_simbolos* conjunto_simbolos_create();
+Conjunto_simbolos* conjunto_simbolos_create(char *nombre);
 
 /** Insertar symbolo en el conjunto*/
 void insert_simbolo (Conjunto_simbolos *conjunto_simbolos, char *sym);

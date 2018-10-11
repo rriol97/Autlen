@@ -19,10 +19,10 @@ int main() {
 
 	printf("---------------EASTADO---------------------\n");
 
-	estado1 = estado_create("ricardo", NORMAL);
+	estado1 = estado_create("ricardo", NORMAL,0);
 	print_estado(estado1);
 
-	estado2= estado_create("Paco", FINAL);
+	estado2= estado_create("Paco", FINAL,1);
 	print_estado(estado2);
 
 	printf("--------------CONJUNTOS DE SIMBOLOS---------------------\n");
@@ -42,7 +42,11 @@ int main() {
 
 
 	printf("-------------------TRANSICIONES-----------------\n");
-	transicion = transicion_create(estado1, estado2, "a");
+	transicion = transicion_create(3,2);
+	transicion_print(transicion);
+	set_valor_transicion(transicion,2,1,1);
+	set_valor_transicion(transicion,0,1,1);
+
 	transicion_print(transicion);
 
 
