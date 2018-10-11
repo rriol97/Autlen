@@ -123,7 +123,24 @@ void AFNDInsertaEstado(AFND* afnd, char* nombre, int tipo) {
 
 void AFNDInsertaTransicion(AFND* afnd, char* nombreEstadoSalida, char* nombreSim, char* nombreEstadoLlegada);
 
-void AFNDImprime(FILE *f, AFND* afnd);
+void AFNDImprime(FILE *f, AFND* afnd) {
+    int i;
+    char aux[32]; // TODO: revisar
+
+    if (!afnd) {
+        fprintf(f, "Automata vacio\n");
+    }
+
+    fprintf(f, "[AFND: %s\n", afnd->nombre);
+
+    fprintf(f, "\tEstados: %s,", afnd->estados[0]);
+    for (i = 1; i < afnd->nest; i++) {
+        // Func imprimir, solo nombre
+        strcpy(aux, estado_imprimir(afnd->estados[i]));
+        fprintf(f, ", %s", aux);
+    }
+
+}
 
 void AFNDInsertaLetra(AFND* afnd, char* nombreLetra) {
     if (!afnd || !nombreLetra) {
@@ -136,8 +153,29 @@ void AFNDInsertaLetra(AFND* afnd, char* nombreLetra) {
 /*
 Estado actual a INICIAL
 */
-void AFNDInicializaEstado(AFND* afnd);
+void AFNDInicializaEstado(AFND* afnd) {
+    int i;
 
-void AFNDImprimeCadenaActual(FILE* f, AFND* afnd);
+    if (!afnd) {
+        return;
+    }
+
+    for (i = 0; i < afnd->nest; i++) {
+        if (get_tipo_estado(afnd->estados[i]) == INICIAL) {
+            afnd->estadoActual = afnd->estados[i];
+            break;
+        }
+    }
+}
+
+void AFNDImprimeCadenaActual(FILE* f, AFND* afnd) {
+    if (!f || !afnd) {
+        return;
+    }
+
+    conjunto_simbolos_imprimir_cadena(afnd->entrada);
+
+    return;
+}
 
 void AFNDProcesaEntrada(FILE* f, AFND* afnd);

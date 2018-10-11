@@ -46,7 +46,7 @@ Transicion* transicion_create(Estado *estado_inicial, Estado *estado_final, char
 }
 
 /**Liberamos la memoria de una transicion*/
-void transicion_destroy(Transicion *transicion){
+void transicion_destroy(Transicion *transicion) {
 
 	if(!transicion) {
 		return;
