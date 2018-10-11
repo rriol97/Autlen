@@ -25,9 +25,7 @@ void insert_simbolo (Conjunto_simbolos *conjunto_simbolos, char *sym);
 /**Liberamos la memoria de un conjunto_simbolos*/
 void conjunto_simbolos_destroy(Conjunto_simbolos *conjunto_simbolos);
 
-
 char** get_simbolos(Conjunto_simbolos *conjunto_simbolos);
-
 
 /**Obtener el nombre del conjunto_simbolos*/
 char* get_nombre_conjunto(Conjunto_simbolos *conjunto_simbolos);

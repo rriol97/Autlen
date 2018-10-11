@@ -171,6 +171,7 @@ void print_conjunto_simbolos(Conjunto_simbolos *conjunto_simbolos){
 	}
 
 	else {
+		printf("Num_simbolos = %d\n", conjunto_simbolos->nsym);
 		printf("%s = {", conjunto_simbolos->nombre);
 
 		for (simbolo = 0; simbolo < conjunto_simbolos->nsym - 1; simbolo++){
