@@ -21,7 +21,7 @@ struct _Conjunto_simbolos {
 Conjunto_simbolos* conjunto_simbolos_create(char *nombre) {
 	Conjunto_simbolos *conjunto_simbolos = NULL;
 
-	if (!nombre){
+	if (!nombre) {
 		return NULL;	
 	}
 	

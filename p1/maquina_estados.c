@@ -1,6 +1,6 @@
 /* ===================================================================
 File: maquina_estados.c
-Authors:Ricardo Riol, Francisco de Vicente Lana
+Authors: Ricardo Riol, Francisco de Vicente Lana
 
 Main de prueba
 =================================================================== */

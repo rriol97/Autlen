@@ -12,6 +12,8 @@ Módulo que implementa el TAD conjunto_simbolos
 #include <stdlib.h>
 #include <string.h>
 
+#define CADENA "cadena"
+
 typedef struct _Conjunto_simbolos Conjunto_simbolos;
 
 /** Funciones */
@@ -20,7 +22,7 @@ typedef struct _Conjunto_simbolos Conjunto_simbolos;
 Conjunto_simbolos* conjunto_simbolos_create();
 
 /** Insertar symbolo en el conjunto*/
-void insert_simbolo (Conjunto_simbolos *conjunto_simbolos, char *sym);
+void insert_simbolo(Conjunto_simbolos *conjunto_simbolos, char *sym);
 
 /**Liberamos la memoria de un conjunto_simbolos*/
 void conjunto_simbolos_destroy(Conjunto_simbolos *conjunto_simbolos);
