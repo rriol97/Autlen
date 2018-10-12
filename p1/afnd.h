@@ -43,7 +43,7 @@ void AFNDInsertaTransicion(AFND* afnd, char* nombreEstadoSalida, char* nombreSim
 
 void AFNDImprime(FILE *f, AFND* afnd);
 
-void AFNDInsertaLetra(AFND* afnd, char* nombreLetra);
+AFND* AFNDInsertaLetra(AFND* afnd, char* nombreLetra);
 
 /*
 Estado actual a INICIAL

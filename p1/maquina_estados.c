@@ -5,56 +5,54 @@ Authors: Ricardo Riol, Francisco de Vicente Lana
 Main de prueba
 =================================================================== */
 #include <stdio.h>
+#include "afnd.h"
 #include "estado.h"
 #include "conjunto_simbolos.h"
 #include "transicion.h"
 
 
 
-int main() {
-	Estado *estado1 = NULL;
-	Estado *estado2 = NULL;
-	Conjunto_simbolos *conjunto_simbolos = NULL;
-	Transicion *transicion = NULL;
+int main(int argc, char **argv) {
 
-	printf("---------------EASTADO---------------------\n");
+/* DECLARACIÓN DE UN PUNTERO A UN AFND */
+	AFND *p_afnd = NULL;
 
-	estado1 = estado_create("ricardo", NORMAL,0);
-	print_estado(estado1);
+/* INICIALIZACIÓN DE UN NUEVO AFND DE NOMBRE af1 Y CON 3 ESTADOS Y 2 SÍMBOLOS EN SU ALFABETO */	
+	p_afnd = AFNDNuevo("af1",3,2);
 
-	estado2= estado_create("Paco", FINAL,1);
-	print_estado(estado2);
+/* DEFINICIÓN DEL ALFABETO DEL AFND */
+	AFNDInsertaSimbolo(p_afnd,"0");
+	AFNDInsertaSimbolo(p_afnd,"1");
 
-	printf("--------------CONJUNTOS DE SIMBOLOS---------------------\n");
+/* DEFINICIÓN DEL CONJUNTO DE ESTADOS */
+	AFNDInsertaEstado(p_afnd,"q0",INICIAL);
+	AFNDInsertaEstado(p_afnd,"q1",NORMAL);
+	AFNDInsertaEstado(p_afnd,"qf",FINAL);	
 
-	conjunto_simbolos = conjunto_simbolos_create("A");
-	insert_simbolo(conjunto_simbolos, "a");
-	insert_simbolo(conjunto_simbolos, "b");
-	insert_simbolo(conjunto_simbolos, "c");
-	insert_simbolo(conjunto_simbolos, "d");
+/* DEFINICIÓN DE LAS TRANSICIONES NO LAMBDA */
+	AFNDInsertaTransicion(p_afnd, "qo", "0", "q0");
 
-	printf("-----------Comparaciones --------\n");
-	printf("%d\n", is_in_conjunto_simbolos(conjunto_simbolos, "a"));
-	printf("%d\n", is_in_conjunto_simbolos(conjunto_simbolos, "f"));
+	AFNDInsertaTransicion(p_afnd, "qo", "1", "q0");
 
-	printf("Num_elementos: %d\n", get_num_simbolos(conjunto_simbolos));
-	print_conjunto_simbolos(conjunto_simbolos);
+	AFNDInsertaTransicion(p_afnd, "qo", "1", "q1");
 
+	AFNDInsertaTransicion(p_afnd, "qo", "1", "qf");
 
-	printf("-------------------TRANSICIONES-----------------\n");
-	transicion = transicion_create(3,2);
-	transicion_print(transicion);
-	set_valor_transicion(transicion,2,1,1);
-	set_valor_transicion(transicion,0,1,1);
+/* SE MUESTRA EL AFND DEFINIDO */
+	fprintf(stdout,"\n****************** AFND *********************\n");
+	AFNDImprime(stdout,p_afnd);
+	fprintf(stdout,"\n*********************************************\n");	
 
-	transicion_print(transicion);
-
+/* DEFINICIÓN DE LA CADENA DE ENTRADA [ 0 1 0 1 1 ] */
+	p_afnd= AFNDInsertaLetra(p_afnd,"0");
+	p_afnd= AFNDInsertaLetra(p_afnd,"1");
+	p_afnd= AFNDInsertaLetra(p_afnd,"0");
+	p_afnd= AFNDInsertaLetra(p_afnd,"1");
+	p_afnd= AFNDInsertaLetra(p_afnd,"1");
 
 
-	conjunto_simbolos_destroy(conjunto_simbolos);
-	estado_destroy(estado1);
-	estado_destroy(estado2);
-	transicion_destroy(transicion);
+	AFNDElimina(p_afnd);	
+
 	return 0;
 
 }

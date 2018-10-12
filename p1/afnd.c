@@ -27,47 +27,46 @@ struct _AFND {
 
 AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
     AFND* afnd = NULL;
-    int i;
 
     if (!nombre || nest < 1 || nsim < 1) {
-        return;
+        return NULL;
     }
 
     afnd = (AFND *)malloc(sizeof(AFND));
     if (!afnd) {
-        return;
+        return NULL;
     }
 
     /* nombre */
     afnd->nombre = (char *)malloc(sizeof(char) * (strlen(nombre) + 1));
     if (!afnd->nombre) {
         free(afnd);
-        return;
+        return NULL;
     }
     if (!strcpy(afnd->nombre, nombre)) {
         free(afnd->nombre);
         free(afnd);
-        return;
+        return NULL;
     }
 
     /* nest, nsim y idEstados */
     afnd->nest = nest;
     afnd->nsim = nsim;
-    afnd->idEstados = 0;
+    afnd->idEstados = 1;
 
     /* estados y alfabeto */
-    afnd->estados = (Estado *)malloc(sizeof(Estado*) * nest);
+    afnd->estados = (Estado **)malloc(sizeof(Estado*) * nest);
     if (!afnd->estados) {
         free(afnd->nombre);
         free(afnd);
-        return;
+        return NULL;
     }
-    afnd->alfabeto = conjunto_simbolos_create();
+    afnd->alfabeto = conjunto_simbolos_create("A");
     if (afnd->alfabeto) {
         free(afnd->estados);
         free(afnd->nombre);
         free(afnd);
-        return;
+        return NULL;
     }
 
     /* Transiciones, Entreda y Estado actual */
@@ -75,7 +74,7 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
     afnd->trans = NULL;
     afnd->entrada = conjunto_simbolos_create(CADENA);
 
-    return;
+    return afnd;
 }
 
 void AFNDElimina(AFND* afnd) {
@@ -115,8 +114,8 @@ void AFNDInsertaEstado(AFND* afnd, char* nombre, int tipo) {
         return;
     }
     
-    afnd->estados[afnd->idEstados] = 
-    estado_create(nombre, tipo, afnd->idEstados++);
+    afnd->idEstados = afnd->idEstados + 1;
+    afnd->estados[afnd->idEstados] = estado_create(nombre, tipo, afnd->idEstados);
 
     return;
 }
@@ -131,7 +130,11 @@ void AFNDImprime(FILE *f, AFND* afnd) {
         fprintf(f, "Automata vacio\n");
     }
 
-    fprintf(f, "[AFND: %s\n", afnd->nombre);
+    fprintf(f, "{AFND: %s\n", afnd->nombre);
+
+    print_conjunto_simbolos(f, afnd->alfabeto);
+
+    fprintf(f, "num_estados %d\n", afnd->idEstados);
 
     fprintf(f, "\tEstados: %s,", afnd->estados[0]);
     for (i = 1; i < afnd->nest; i++) {
@@ -142,12 +145,13 @@ void AFNDImprime(FILE *f, AFND* afnd) {
 
 }
 
-void AFNDInsertaLetra(AFND* afnd, char* nombreLetra) {
+AFND* AFNDInsertaLetra(AFND* afnd, char* nombreLetra) {
     if (!afnd || !nombreLetra) {
-        return;
+        return NULL;
     }
 
     insert_simbolo(afnd->entrada, nombreLetra);
+    return afnd;
 }
 
 /*
@@ -173,7 +177,7 @@ void AFNDImprimeCadenaActual(FILE* f, AFND* afnd) {
         return;
     }
 
-    conjunto_simbolos_imprimir_cadena(afnd->entrada);
+    print_conjunto_simbolos(afnd->entrada);
 
     return;
 }

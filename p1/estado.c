@@ -51,6 +51,10 @@ Estado* estado_create(char *nombre, TIPO tipo, int id) {
 		return NULL;
 	}
 
+	if (tipo == FINAL){
+		strcat(nombre, "*");
+	}
+	
 	strcpy(estado->nombre, nombre);
 	estado->tipo = tipo;
 	estado->id = id;
