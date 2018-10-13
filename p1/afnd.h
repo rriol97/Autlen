@@ -26,6 +26,15 @@ retorno: retorno al AFND creado
 AFND* AFNDNuevo(char* nombre, int nest, int nsim);
 
 /* 
+nombre: AFNDElimina
+desc: libera los recursos reservados para el afnd
+args:
+    -afnd: automata a eliminar
+retorno: -
+*/
+void AFNDElimina(AFND* afnd);
+
+/* 
 nombre: AFNDInsertaSimbolo
 desc: inserta un nuevo simbolo que maneja el afnd
 args:
@@ -106,12 +115,3 @@ args:
 retorno: -
 */
 void AFNDProcesaEntrada(FILE* f, AFND* afnd);
-
-/* 
-nombre: AFNDElimina
-desc: libera los recursos reservados para el afnd
-args:
-    -afnd: automata a eliminar
-retorno: -
-*/
-void AFNDElimina(AFND* afnd);

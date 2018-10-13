@@ -25,9 +25,10 @@ EXEC_SOURCES = $(shell grep -l "^int main" $(SOURCES) | xargs)
 EXECS = $(shell echo $(EXEC_SOURCES) | sed -e 's:\.c[p]*::g')
 DEPS = $(shell echo $(SOURCES) | sed -e 's:\.c[p]*:\.d:g')
 
-all:	maquina_estados
+all: test
 
-maquina_estados:	afnd.o transicion.o estado.o conjunto_simbolos.o maquina_estados.o
+#maquina_estados:	afnd.o transicion.o estado.o conjunto_simbolos.o maquina_estados.o
+test: afnd.o transicion.o estado.o conjunto_simbolos.o test.o
 
 # receta para hacer un .d (dependencias automaticas de tipo .h para tus .o)
 %.d : %.c

@@ -40,6 +40,8 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
     /* nombre */
     afnd->nombre = (char *)malloc(sizeof(char) * (strlen(nombre) + 1));
     if (!afnd->nombre) {
+        printf("\n\nPeto aqui 2 <<<----------------------\n\n");
+
         free(afnd);
         return NULL;
     }
@@ -63,6 +65,7 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
     }
     afnd->alfabeto = conjunto_simbolos_create("A");
     if (afnd->alfabeto) {
+        printf("\n\nPeto aqui 1 <<<----------------------\n\n");
         free(afnd->estados);
         free(afnd->nombre);
         free(afnd);
@@ -143,6 +146,7 @@ void AFNDImprime(FILE *f, AFND* afnd) {
 
     if (!afnd) {
         fprintf(f, "AFND vacio\n");
+        return;
     }
 
     fprintf(f, "{-------------- AFND: %s -------------\n", afnd->nombre);
@@ -211,4 +215,10 @@ void AFNDImprimeCadenaActual(FILE* f, AFND* afnd) {
     return;
 }
 
-void AFNDProcesaEntrada(FILE* f, AFND* afnd);
+void AFNDProcesaEntrada(FILE* f, AFND* afnd) {
+    if (!f || !afnd) {
+        return;
+    }
+
+    return;
+}
