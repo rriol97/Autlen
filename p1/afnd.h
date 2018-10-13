@@ -6,6 +6,8 @@ Modulo que define el TAD automata finito no determinista.
 =================================================================== */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "estado.h"
 #include "conjunto_simbolos.h"
 #include "transicion.h"

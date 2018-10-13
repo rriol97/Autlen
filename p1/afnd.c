@@ -120,7 +120,23 @@ void AFNDInsertaEstado(AFND* afnd, char* nombre, int tipo) {
     return;
 }
 
-void AFNDInsertaTransicion(AFND* afnd, char* nombreEstadoSalida, char* nombreSim, char* nombreEstadoLlegada);
+void AFNDInsertaTransicion(AFND* afnd, char* nombreEstadoSalida, char* nombreSim, char* nombreEstadoLlegada) {
+    int sim_int;
+    int q0_int, qf_int;
+    
+    if (!afnd || !nombreEstadoSalida || !nombreSim || !nombreEstadoLlegada) {
+        return;
+    }
+
+    sim_int = atoi(nombreSim);
+    q0_int = atoi(nombreEstadoSalida[1]);
+    qf_int = atoi(nombreEstadoLlegada[1]);
+
+    //Funcion para insertar transiciones?
+    set_valor_transicion(afnd->trans, sim_int, q0_int, qf_int);
+
+    return;
+}
 
 void AFNDImprime(FILE *f, AFND* afnd) {
     int i;
@@ -141,8 +157,9 @@ void AFNDImprime(FILE *f, AFND* afnd) {
         fprintf(f, ", ");
         estado_imprimir(f, afnd->estados[i]);
     }
-    strcpy(aux, estado_imprimir(afnd->estadoActual);
-    fprintf(f, "\tEstado actual: %s", aux);
+    
+    fprintf(f, "\tEstado actual: ");
+    estado_imprimir(f, afnd->estadoActual);
 
     /* Alfabeto y cadena */
     fprintf(f, "\tAlfabeto [%d]: ", afnd->nsim);
@@ -190,7 +207,7 @@ void AFNDImprimeCadenaActual(FILE* f, AFND* afnd) {
         return;
     }
 
-    printf("Cadena entrante:\n")
+    printf("Cadena entrante:\n");
     print_conjunto_simbolos(f, afnd->entrada);
 
     return;
