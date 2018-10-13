@@ -40,8 +40,6 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
     /* nombre */
     afnd->nombre = (char *)malloc(sizeof(char) * (strlen(nombre) + 1));
     if (!afnd->nombre) {
-        printf("\n\nPeto aqui 2 <<<----------------------\n\n");
-
         free(afnd);
         return NULL;
     }
@@ -64,8 +62,7 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
         return NULL;
     }
     afnd->alfabeto = conjunto_simbolos_create("A");
-    if (afnd->alfabeto) {
-        printf("\n\nPeto aqui 1 <<<----------------------\n\n");
+    if (!afnd->alfabeto) {
         free(afnd->estados);
         free(afnd->nombre);
         free(afnd);

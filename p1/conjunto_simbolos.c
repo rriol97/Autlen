@@ -27,13 +27,22 @@ Conjunto_simbolos* conjunto_simbolos_create(char *nombre) {
 	
 
 	conjunto_simbolos = (Conjunto_simbolos*) malloc (sizeof(Conjunto_simbolos));
-	conjunto_simbolos->nombre = (char*) malloc (sizeof(char) * strlen(nombre) +1);	
-
 	if (!conjunto_simbolos) {
 		return NULL;
 	}
 
-	strcpy(conjunto_simbolos->nombre, nombre);
+	conjunto_simbolos->nombre = (char*) malloc (sizeof(char) * strlen(nombre) +1);	
+	if (!conjunto_simbolos->nombre) {
+		free(conjunto_simbolos);
+		return NULL;
+	}
+	
+
+	if (!strcpy(conjunto_simbolos->nombre, nombre)) {
+		free(conjunto_simbolos->nombre);
+		free(conjunto_simbolos);
+		return NULL;
+	}
 	conjunto_simbolos->simbolos = NULL;
 	conjunto_simbolos->nsym = 0;
 
