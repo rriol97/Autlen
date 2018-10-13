@@ -135,17 +135,16 @@ void set_valor_transicion(Transicion *trans, int simbolo, int estado1, int estad
 }
 
 /**Imprimir tabla de simbolos*/
-void transicion_print(Transicion *transicion){
-	int i,j,k;
+void transicion_print(FILE* f, Transicion *transicion) {
+	int i, j, k;
 
 	for (k = 0; k < transicion->num_tablas; k++) {
-		printf("Tabla del simbolo %d\n", k);
-		for (i = 0; i < transicion->dim_matriz; i++){
-			for (j = 0; j < transicion->dim_matriz; j++){
-				printf("%d", transicion->transiciones[k][i][j]);;
+		fprintf(f, "Tabla del simbolo %d\n", k);
+		for (i = 0; i < transicion->dim_matriz; i++) {
+			for (j = 0; j < transicion->dim_matriz; j++) {
+				fprintf(f, "%d", transicion->transiciones[k][i][j]);
 			}
-
-			printf("\n");
+			fprintf(f, "\n");
 		}
 	}	
 

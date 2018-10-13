@@ -30,6 +30,6 @@ int get_valor_transicion(Transicion *transicion, int simbolo, int estado1, int e
 void set_valor_transicion(Transicion *transicion, int simbolo, int estado1, int estado2);
 
 /**Imprimir tabla de simbolos*/
-void transicion_print(Transicion *transicion);
+void transicion_print(FILE* f, Transicion *transicion);
 
 #endif

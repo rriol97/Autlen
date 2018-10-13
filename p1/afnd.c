@@ -127,36 +127,49 @@ void AFNDImprime(FILE *f, AFND* afnd) {
     char aux[32]; // TODO: revisar
 
     if (!afnd) {
-        fprintf(f, "Automata vacio\n");
+        fprintf(f, "AFND vacio\n");
     }
 
-    fprintf(f, "{AFND: %s\n", afnd->nombre);
+    fprintf(f, "{-------------- AFND: %s -------------\n", afnd->nombre);
 
-    print_conjunto_simbolos(f, afnd->alfabeto);
-
-    fprintf(f, "num_estados %d\n", afnd->idEstados);
-
-    fprintf(f, "\tEstados: %s,", afnd->estados[0]);
+    /* Estados */
+    strcpy(aux, estado_imprimir(afnd->estados[0]));
+    fprintf(f, "\tEstados [%d]: ", afnd->nest);
+    estado_imprimir(f, afnd->estados[0]);
     for (i = 1; i < afnd->nest; i++) {
         // Func imprimir, solo nombre
-        strcpy(aux, estado_imprimir(afnd->estados[i]));
-        fprintf(f, ", %s", aux);
+        fprintf(f, ", ");
+        estado_imprimir(f, afnd->estados[i]);
     }
+    strcpy(aux, estado_imprimir(afnd->estadoActual);
+    fprintf(f, "\tEstado actual: %s", aux);
 
+    /* Alfabeto y cadena */
+    fprintf(f, "\tAlfabeto [%d]: ", afnd->nsim);
+    print_conjunto_simbolos(f, afnd->alfabeto);
+
+    fprintf(f, "\tCadena entrada: ");
+    print_conjunto_simbolos(f, afnd->entrada);
+
+    /* Transiciones */
+    fprintf(f, "\tTabla transiciones: ");
+    transicion_print(f, afnd->trans);
+
+    fprintf(f, "------------------- FIN AFND -------------------\n");
+
+    return;
 }
 
-AFND* AFNDInsertaLetra(AFND* afnd, char* nombreLetra) {
+void AFNDInsertaLetra(AFND* afnd, char* nombreLetra) {
     if (!afnd || !nombreLetra) {
         return NULL;
     }
 
     insert_simbolo(afnd->entrada, nombreLetra);
-    return afnd;
+    return;
 }
 
-/*
-Estado actual a INICIAL
-*/
+
 void AFNDInicializaEstado(AFND* afnd) {
     int i;
 
@@ -177,7 +190,8 @@ void AFNDImprimeCadenaActual(FILE* f, AFND* afnd) {
         return;
     }
 
-    print_conjunto_simbolos(afnd->entrada);
+    printf("Cadena entrante:\n")
+    print_conjunto_simbolos(f, afnd->entrada);
 
     return;
 }

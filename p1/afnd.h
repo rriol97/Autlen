@@ -11,18 +11,6 @@ Modulo que define el TAD automata finito no determinista.
 #include "transicion.h"
 
 typedef struct _AFND AFND;
-/*
-struct _AFND {
-	char *nombre;
-    int nest;
-    Estado** estados;
-    int nsim;
-    Conjunto_simbolos* alfabeto;
-    Transicion* trans;
-    Conjunto_simbolos* entrada;
-    Estado* estadoActual;
-};
-*/
 
 /* 
 nombre: AFNDNuevo
@@ -31,6 +19,7 @@ args:
     -nombre: nombre del AFND
     -nest: numero de estados
     -nsim: numero simbolos
+retorno: retorno al AFND creado
 */
 AFND* AFNDNuevo(char* nombre, int nest, int nsim);
 
@@ -43,7 +32,7 @@ void AFNDInsertaTransicion(AFND* afnd, char* nombreEstadoSalida, char* nombreSim
 
 void AFNDImprime(FILE *f, AFND* afnd);
 
-AFND* AFNDInsertaLetra(AFND* afnd, char* nombreLetra);
+void AFNDInsertaLetra(AFND* afnd, char* nombreLetra);
 
 /*
 Estado actual a INICIAL
