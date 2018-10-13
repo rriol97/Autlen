@@ -73,7 +73,7 @@ void estado_destroy(Estado *estado){
 	return;
 }
 
-char* get_name_estado(Estado* estado){
+char* get_name_estado(Estado* estado) {
 
 	if (!estado){
 		return NULL;
@@ -82,7 +82,7 @@ char* get_name_estado(Estado* estado){
 	return estado->nombre;
 }
 
-TIPO get_tipo_estado(Estado *estado){
+TIPO get_tipo_estado(Estado *estado) {
 
 	if (!estado){
 		return -1;
@@ -91,17 +91,17 @@ TIPO get_tipo_estado(Estado *estado){
 	return estado->tipo;	
 }
 
-void print_estado(Estado *estado){
+void print_estado(FILE* f, Estado *estado) {
 
-	if (!estado){
+	if (!estado) {
 		return;
 	}
 
-	printf("Nombre: %s\nTipo: %s\n", estado->nombre, texto_enum(estado->tipo));
+	fprintf(f, "Nombre: %s\nTipo: %s\n", estado->nombre, texto_enum(estado->tipo));
 	return;
 }	
 
-TIPO get_id_estado(Estado *estado){
+TIPO get_id_estado(Estado *estado) {
 
 	if (!estado){
 		return -1;
