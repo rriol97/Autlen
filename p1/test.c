@@ -7,6 +7,8 @@ Main de prueba
 #include <stdio.h>
 #include "afnd.h"
 
+// valgrind --leak-check=full ./test
+
 int main(int argc, char **argv) {
 
 /* DECLARACIÓN DE UN PUNTERO A UN AFND */

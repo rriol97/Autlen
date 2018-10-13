@@ -62,9 +62,9 @@ Estado* estado_create(char *nombre, TIPO tipo, int id) {
 	return estado;
 }
 
-void estado_destroy(Estado *estado){
+void estado_destroy(Estado *estado) {
 
-	if (!estado){
+	if (!estado) {
 		return;
 	}
 
@@ -91,7 +91,7 @@ TIPO get_tipo_estado(Estado *estado) {
 	return estado->tipo;	
 }
 
-void print_estado(FILE* f, Estado *estado) {
+void print_estado(FILE* f, Estado* estado) {
 
 	if (!estado) {
 		return;

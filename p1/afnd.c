@@ -24,9 +24,9 @@ struct _AFND {
 };
 
 /** Funciones del AFND */
-
 AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
     AFND* afnd = NULL;
+    int i;
 
     if (!nombre || nest < 1 || nsim < 1) {
         return NULL;
@@ -49,18 +49,21 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
         return NULL;
     }
 
-    /* nest, nsim y idEstados */
+    /* estados y alfabeto */
     afnd->nest = nest;
     afnd->nsim = nsim;
-    afnd->idEstados = 1;
+    afnd->idEstados = 0;
 
-    /* estados y alfabeto */
     afnd->estados = (Estado **)malloc(sizeof(Estado*) * nest);
     if (!afnd->estados) {
         free(afnd->nombre);
         free(afnd);
         return NULL;
     }
+    for (i = 0; i < nest; i++) {
+        afnd->estados[i] = NULL;
+    }
+
     afnd->alfabeto = conjunto_simbolos_create("A");
     if (!afnd->alfabeto) {
         free(afnd->estados);
@@ -71,7 +74,7 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
 
     /* Transiciones, Entreda y Estado actual */
     afnd->estadoActual = NULL;
-    afnd->trans = NULL;
+    afnd->trans = transicion_create(afnd->nsim, afnd->nest);
     afnd->entrada = conjunto_simbolos_create(CADENA);
 
     return afnd;
@@ -88,9 +91,14 @@ void AFNDElimina(AFND* afnd) {
 
     /* Liberacion estados */
     for (i = 0; i < afnd->nest; i++) {
+        if (!afnd->estados[i]) {
+            break;
+        }
         estado_destroy(afnd->estados[i]);
     }   
-    estado_destroy(afnd->estadoActual);
+    // estado_destroy(afnd->estadoActual); esta incluido arriba
+    afnd->estadoActual = NULL;
+    free(afnd->estados);
 
     /* Liberacion de simbolos y cadena */
     conjunto_simbolos_destroy(afnd->alfabeto);
@@ -98,6 +106,8 @@ void AFNDElimina(AFND* afnd) {
 
     /* Liberacion transiciones */
     transicion_destroy(afnd->trans);
+
+    free(afnd);
 
     return;
 }
@@ -146,19 +156,24 @@ void AFNDImprime(FILE *f, AFND* afnd) {
         return;
     }
 
-    fprintf(f, "{-------------- AFND: %s -------------\n", afnd->nombre);
+    fprintf(f, "{ AFND: %s\n", afnd->nombre);
 
     /* Estados */
     fprintf(f, "\tEstados [%d]: ", afnd->nest);
-    print_estado(f, afnd->estados[0]);
-    for (i = 1; i < afnd->nest; i++) {
-        // Func imprimir, solo nombre
-        fprintf(f, ", ");
-        print_estado(f, afnd->estados[i]);
+    if (afnd->idEstados == 0) {
+        fprintf(f, "-\n");
     }
-    
-    fprintf(f, "\tEstado actual: ");
-    print_estado(f, afnd->estadoActual);
+    else {
+        print_estado(f, afnd->estados[0]);
+        for (i = 1; i < afnd->nest; i++) {
+            // Func imprimir, solo nombre
+            fprintf(f, ", ");
+            print_estado(f, afnd->estados[i]);
+        }
+        
+        fprintf(f, "\tEstado actual: ");
+        print_estado(f, afnd->estadoActual);
+    }
 
     /* Alfabeto y cadena */
     fprintf(f, "\tAlfabeto [%d]: ", afnd->nsim);
@@ -169,9 +184,14 @@ void AFNDImprime(FILE *f, AFND* afnd) {
 
     /* Transiciones */
     fprintf(f, "\tTabla transiciones: ");
-    transicion_print(f, afnd->trans);
+    if (!afnd->trans) {
+        fprintf(f, "-\n");
+    }
+    else {
+        transicion_print(f, afnd->trans);
+    }
 
-    fprintf(f, "------------------- FIN AFND -------------------\n");
+    fprintf(f, "}\n");
 
     return;
 }

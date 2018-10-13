@@ -24,7 +24,6 @@ Conjunto_simbolos* conjunto_simbolos_create(char *nombre) {
 	if (!nombre) {
 		return NULL;	
 	}
-	
 
 	conjunto_simbolos = (Conjunto_simbolos*) malloc (sizeof(Conjunto_simbolos));
 	if (!conjunto_simbolos) {
@@ -36,7 +35,6 @@ Conjunto_simbolos* conjunto_simbolos_create(char *nombre) {
 		free(conjunto_simbolos);
 		return NULL;
 	}
-	
 
 	if (!strcpy(conjunto_simbolos->nombre, nombre)) {
 		free(conjunto_simbolos->nombre);
@@ -88,14 +86,16 @@ void insert_simbolo (Conjunto_simbolos *conjunto_simbolos, char *sym) {
 }
 
 /**Liberamos la memoria de un conjunto_simbolos*/
-void conjunto_simbolos_destroy(Conjunto_simbolos *conjunto_simbolos){
+void conjunto_simbolos_destroy(Conjunto_simbolos *conjunto_simbolos) {
 	int i;
 
-	if (!conjunto_simbolos){
+	if (!conjunto_simbolos) {
 		return;
 	}
 
-	if (conjunto_simbolos->nsym == 0){
+	free(conjunto_simbolos->nombre);
+
+	if (conjunto_simbolos->nsym == 0) {
 		free (conjunto_simbolos);
 		return;
 	}
@@ -104,7 +104,6 @@ void conjunto_simbolos_destroy(Conjunto_simbolos *conjunto_simbolos){
 		free(conjunto_simbolos->simbolos[i]);
 	}
 
-	free(conjunto_simbolos->nombre);
 	free(conjunto_simbolos->simbolos);
 	free(conjunto_simbolos);
 }
@@ -164,7 +163,7 @@ void print_conjunto_simbolos(FILE *f, Conjunto_simbolos *conjunto_simbolos){
 	int simbolo;
 
 	if (conjunto_simbolos->nsym == 0){
-		printf("No hay simbolos en %s\n", conjunto_simbolos->nombre);
+		printf("-\n");
 		return;
 	}
 
