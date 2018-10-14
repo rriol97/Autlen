@@ -159,19 +159,18 @@ int get_num_simbolos(Conjunto_simbolos *conjunto_simbolos){
 }
 
 /** Función que nos facilitará la impresión de un conjunto_simbolos*/
-void print_conjunto_simbolos(FILE *f, Conjunto_simbolos *conjunto_simbolos){
+void print_conjunto_simbolos(FILE *f, Conjunto_simbolos *conjunto_simbolos) {
 	int simbolo;
 
-	if (conjunto_simbolos->nsym == 0){
+	if (conjunto_simbolos->nsym == 0) {
 		printf("-\n");
 		return;
 	}
 
-
-	if (strcmp (conjunto_simbolos->nombre, "Cadena") == 0){
+	if (strcmp (conjunto_simbolos->nombre, "Cadena") == 0) {
 		printf("[(%d) ", conjunto_simbolos->nsym);
 
-		for (simbolo = 0; simbolo < conjunto_simbolos->nsym - 1; simbolo++){
+		for (simbolo = 0; simbolo < conjunto_simbolos->nsym - 1; simbolo++) {
 			printf("%s ", conjunto_simbolos->simbolos[simbolo]);
 		}
 
@@ -179,8 +178,8 @@ void print_conjunto_simbolos(FILE *f, Conjunto_simbolos *conjunto_simbolos){
 	}
 
 	else {
-		printf("Num_simbolos = %d\n", conjunto_simbolos->nsym);
-		printf("%s = {", conjunto_simbolos->nombre);
+		//printf("Num_simbolos = %d\n", conjunto_simbolos->nsym);
+		printf("{");
 
 		for (simbolo = 0; simbolo < conjunto_simbolos->nsym - 1; simbolo++){
 			printf("%s,", conjunto_simbolos->simbolos[simbolo]);

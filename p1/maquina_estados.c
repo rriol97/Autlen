@@ -30,13 +30,13 @@ int main(int argc, char **argv) {
 	AFNDInsertaEstado(p_afnd,"qf",FINAL);	
 
 /* DEFINICIÓN DE LAS TRANSICIONES NO LAMBDA */
-	AFNDInsertaTransicion(p_afnd, "qo", "0", "q0");
+	AFNDInsertaTransicion(p_afnd, "q0", "0", "q0");
 
-	AFNDInsertaTransicion(p_afnd, "qo", "1", "q0");
+	AFNDInsertaTransicion(p_afnd, "q0", "1", "q0");
 
-	AFNDInsertaTransicion(p_afnd, "qo", "1", "q1");
+	AFNDInsertaTransicion(p_afnd, "q0", "1", "q1");
 
-	AFNDInsertaTransicion(p_afnd, "qo", "1", "qf");
+	AFNDInsertaTransicion(p_afnd, "q0", "1", "qf");
 
 /* SE MUESTRA EL AFND DEFINIDO */
 	fprintf(stdout,"\n****************** AFND *********************\n");

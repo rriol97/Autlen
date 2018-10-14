@@ -20,7 +20,47 @@ int main(int argc, char **argv) {
 /* SE MUESTRA EL AFND DEFINIDO */
 	fprintf(stdout,"\n****************** AFND *********************\n");
 	AFNDImprime(stdout, p_afnd);
-	fprintf(stdout,"\n*********************************************\n");	
+	fprintf(stdout,"\n*********************************************\n");
+
+	AFNDInsertaSimbolo(p_afnd,"0");
+	AFNDInsertaSimbolo(p_afnd,"1");	
+
+	fprintf(stdout,"\n****************** AFND *********************\n");
+	AFNDImprime(stdout, p_afnd);
+	fprintf(stdout,"\n*********************************************\n");
+
+	AFNDInsertaEstado(p_afnd,"q0",INICIAL);
+	AFNDInsertaEstado(p_afnd,"q1",NORMAL);
+	AFNDInsertaEstado(p_afnd,"qf",FINAL);	
+
+	fprintf(stdout,"\n****************** AFND *********************\n");
+	AFNDImprime(stdout, p_afnd);
+	fprintf(stdout,"\n*********************************************\n");
+
+	AFNDInicializaEstado(p_afnd);
+
+	fprintf(stdout,"\n****************** AFND *********************\n");
+	AFNDImprime(stdout, p_afnd);
+	fprintf(stdout,"\n*********************************************\n");
+
+	p_afnd= AFNDInsertaLetra(p_afnd,"0");
+	p_afnd= AFNDInsertaLetra(p_afnd,"1");
+	p_afnd= AFNDInsertaLetra(p_afnd,"0");
+	p_afnd= AFNDInsertaLetra(p_afnd,"1");
+	p_afnd= AFNDInsertaLetra(p_afnd,"1");
+
+	fprintf(stdout,"\n****************** AFND *********************\n");
+	AFNDImprime(stdout, p_afnd);
+	fprintf(stdout,"\n*********************************************\n");
+
+	AFNDInsertaTransicion(p_afnd, "q0", "0", "q0");
+	AFNDInsertaTransicion(p_afnd, "q0", "1", "q0");
+	AFNDInsertaTransicion(p_afnd, "q0", "1", "q1");
+	AFNDInsertaTransicion(p_afnd, "q0", "1", "qf");
+	
+	fprintf(stdout,"\n****************** AFND *********************\n");
+	AFNDImprime(stdout, p_afnd);
+	fprintf(stdout,"\n*********************************************\n");
 
 	AFNDElimina(p_afnd);	
 

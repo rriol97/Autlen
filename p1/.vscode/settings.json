@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "transicion.h": "c",
+        "estado.h": "c",
+        "conjunto_simbolos.h": "c"
+    }
+}

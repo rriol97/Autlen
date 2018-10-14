@@ -124,26 +124,20 @@ void AFNDInsertaEstado(AFND* afnd, char* nombre, int tipo) {
         return;
     }
     
-    afnd->idEstados = afnd->idEstados + 1;
     afnd->estados[afnd->idEstados] = estado_create(nombre, tipo, afnd->idEstados);
+    afnd->idEstados++;
 
     return;
 }
 
 void AFNDInsertaTransicion(AFND* afnd, char* nombreEstadoSalida, char* nombreSim, char* nombreEstadoLlegada) {
-    int sim_int;
-    int q0_int, qf_int;
     
     if (!afnd || !nombreEstadoSalida || !nombreSim || !nombreEstadoLlegada) {
         return;
     }
 
-    sim_int = atoi(nombreSim[0]);
-    q0_int = atoi(nombreEstadoSalida[1]);
-    qf_int = atoi(nombreEstadoLlegada[1]);
-
     //Funcion para insertar transiciones?
-    set_valor_transicion(afnd->trans, sim_int, q0_int, qf_int);
+    set_valor_transicion(afnd->trans, nombreSim, nombreEstadoSalida, nombreEstadoLlegada);
 
     return;
 }
@@ -166,14 +160,19 @@ void AFNDImprime(FILE *f, AFND* afnd) {
     else {
         print_estado(f, afnd->estados[0]);
         for (i = 1; i < afnd->nest; i++) {
-            // Func imprimir, solo nombre
             fprintf(f, ", ");
             print_estado(f, afnd->estados[i]);
         }
-        
-        fprintf(f, "\tEstado actual: ");
+        fprintf(f, "\n");
+    }
+
+    fprintf(f, "\tEstado actual: ");
+    if (!afnd->estadoActual) {
+        fprintf(f, "-");
+    } else {
         print_estado(f, afnd->estadoActual);
     }
+    fprintf(f, "\n");
 
     /* Alfabeto y cadena */
     fprintf(f, "\tAlfabeto [%d]: ", afnd->nsim);
@@ -183,7 +182,7 @@ void AFNDImprime(FILE *f, AFND* afnd) {
     print_conjunto_simbolos(f, afnd->entrada);
 
     /* Transiciones */
-    fprintf(f, "\tTabla transiciones: ");
+    fprintf(f, "\tTablas de transiciones: ");
     if (!afnd->trans) {
         fprintf(f, "-\n");
     }

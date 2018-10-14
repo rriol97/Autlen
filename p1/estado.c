@@ -24,11 +24,11 @@ char* texto_enum(TIPO t) {
 	}
 
 	else if (t == NORMAL) {
-		return "NORMAL";
+		return "Normal";
 	}
 
 	else {
-		return "INICIAL_Y_FINAL";
+		return "Inicial y final";
 	}
 }
 
@@ -45,17 +45,17 @@ Estado* estado_create(char *nombre, TIPO tipo, int id) {
 		return NULL;
 	}
 
-	estado->nombre = (char*) malloc(sizeof(char) * strlen(nombre) + 1);
+	// +2 para fin de cadena y posible asterisco
+	estado->nombre = (char*) malloc(sizeof(char) * strlen(nombre) + 2);
 	if (!estado->nombre){
 		free(estado);
 		return NULL;
 	}
 
-	if (tipo == FINAL){
-		strcat(nombre, "*");
-	}
-	
 	strcpy(estado->nombre, nombre);
+	if (tipo == FINAL) {
+		strcat(estado->nombre, "*");
+	}
 	estado->tipo = tipo;
 	estado->id = id;
 
@@ -93,11 +93,14 @@ TIPO get_tipo_estado(Estado *estado) {
 
 void print_estado(FILE* f, Estado* estado) {
 
-	if (!estado) {
+	if (!f) {
 		return;
 	}
+	if (!estado) {
+		fprintf(f, "-");
+	}
 
-	fprintf(f, "Nombre: %s\nTipo: %s\n", estado->nombre, texto_enum(estado->tipo));
+	fprintf(f, "%s (%s)", estado->nombre, texto_enum(estado->tipo));
 	return;
 }	
 
