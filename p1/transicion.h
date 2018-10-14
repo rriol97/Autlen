@@ -27,7 +27,7 @@ Transicion* transicion_create(int num_simb, int num_estados);
 void transicion_destroy(Transicion *transicion);
 
 /**Obtenemos el valor de la transicion*/
-int get_valor_transicion(Transicion *transicion, int simbolo, int estado1, int estado2);
+int get_valor_transicion(Transicion *transicion, char* simbolo, char* estado1, char* estado2);
 
 /**Obtenemos el valor de la transicion*/
 void set_valor_transicion(Transicion *transicion, char* simbolo, char* estado1, char* estado2);

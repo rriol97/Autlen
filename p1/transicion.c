@@ -168,13 +168,22 @@ void transicion_destroy(Transicion *transicion) {
 }
 
 /**Obtenemos el valor de la transicion*/
-int get_valor_transicion(Transicion *trans, int simbolo, int estado1, int estado2) {
+int get_valor_transicion(Transicion *trans, char* simbolo, char* estado1, char* estado2) {
+	int sim, est0, estf;
 
-	if (simbolo < 0 || simbolo >= trans->num_tablas || estado1 < 0 || estado1 >=trans->dim_matriz || estado2 < 0 || estado2 >=trans->dim_matriz) {
-		return -1;
+	if (!simbolo || !estado1 || !estado2) {
+		return ERR;
 	}
 
-	return trans->transiciones[simbolo][estado1][estado2];
+	sim = mapear_simbolo(trans, simbolo);
+	est0 = mapear_estado(trans, estado1);
+	estf = mapear_estado(trans, estado2);
+
+	if (sim == ERR || est0 == ERR || estf == ERR) {
+		return ERR;
+	}
+
+	return trans->transiciones[sim][est0][estf];
 
 }
 
