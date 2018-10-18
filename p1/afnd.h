@@ -118,4 +118,4 @@ args:
     -afnd: automata a imprimir
 retorno: -
 */
-void AFNDProcesaEntrada(FILE* f, AFND* afnd);
+int AFNDProcesaEntrada(FILE* f, AFND* afnd);

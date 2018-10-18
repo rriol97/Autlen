@@ -27,6 +27,7 @@ struct _AFND {
 Estado* get_estado_from_id(AFND* afnd, int id);
 int algun_actual_final(AFND* afnd);
 void resetear_actuales(AFND* afnd, int* ids);
+int sin_repetidos(int* actuales_aux, int id_aux, int tam);
 
 
 /** Funciones del AFND */
@@ -252,15 +253,13 @@ void AFNDImprimeCadenaActual(FILE* f, AFND* afnd) {
 
 /* ---------------------------------------------------------------------------- */
 int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
-    int len_cadena, i;
+    int len_cadena, i, j, ret, cont = 0;
     int* actuales_aux;
+    char** entrada = get_simbolos(afnd->entrada);
+    char* entrada_actual;
+    int id_aux;
 
     if (!f || !afnd) {
-        return;
-    }
-
-    actuales_aux = (int *)malloc(sizeof(int) * afnd->nest);
-    if (!actuales_aux) {
         return FALSE;
     }
 
@@ -269,10 +268,26 @@ int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
 
     while (hay_actuales(afnd) && afnd->iteraciones < len_cadena) {
 
+        actuales_aux = (int *)malloc(sizeof(int) * afnd->nest);
+        if (!actuales_aux) {
+            return FALSE;
+        }
+        resetear_actuales(afnd, actuales_aux);
+
+        entrada_actual = entrada[afnd->iteraciones];
+
         for (i = 0; i < afnd->nest; i++) {
             if (afnd->id_actuales[i] != SIN_INICIALIZAR) {
-
-
+                for (j = 0; j < afnd->nest; j++){
+                    ret = get_valor_transicion(afnd->trans, entrada_actual, get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])), get_name_estado(afnd->estados[j]));
+                    if (ret == EXISTE) {
+                        id_aux = estado_get_id(afnd->estados[j]);
+                        if (sin_repetidos(actuales_aux, id_aux, afnd->nest)) {
+                            actuales_aux[cont] = id_aux;
+                            cont ++;
+                        }
+                    }
+                }
             }
             else {
                 break;
@@ -280,8 +295,12 @@ int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
             
         }
 
+        cont = 0;
+        free(afnd->id_actuales);
+        afnd->id_actuales = actuales_aux;
 
-        resetear_actuales(afnd, afnd->id_actuales);
+        actuales_aux = NULL;
+        afnd->iteraciones++;
     }
 
     return algun_actual_final(afnd);
@@ -344,4 +363,15 @@ void resetear_actuales(AFND* afnd, int* ids) {
     } 
 
     return;
+}
+
+int sin_repetidos(int* actuales_aux, int id_aux, int tam) {
+    int i;
+
+    for (i = 0; i < tam; i++) {
+        if (actuales_aux[i] == id_aux) {
+            return FALSE;
+        }
+    }
+    return TRUE;
 }
