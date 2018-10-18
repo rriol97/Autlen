@@ -13,15 +13,21 @@ struct _AFND {
     int idEstados;
     int nest;
     Estado** estados;
-    Estado* estadoActual;
+    int* id_actuales;
     /* SIMBOLOS Y CADENAS */
     int nsim;
     Conjunto_simbolos* alfabeto;
     Conjunto_simbolos* entrada;
     /* TRANSICIONES */
     Transicion* trans;
-    
+    int iteraciones;
 };
+
+/** Funciones privadas del modulo */
+Estado* get_estado_from_id(AFND* afnd, int id);
+int algun_actual_final(AFND* afnd);
+void resetear_actuales(AFND* afnd, int* ids);
+
 
 /** Funciones del AFND */
 AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
@@ -73,9 +79,21 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
     }
 
     /* Transiciones, Entreda y Estado actual */
-    afnd->estadoActual = NULL;
+    afnd->id_actuales = (int *)malloc(sizeof(int) * nest);
+    if (!afnd->id_actuales) {
+        free(afnd->alfabeto);
+        free(afnd->estados);
+        free(afnd->nombre);
+        free(afnd);
+        return NULL;
+    }
+
+    resetear_actuales(afnd, afnd->id_actuales);
+
     afnd->trans = transicion_create(afnd->nsim, afnd->nest);
     afnd->entrada = conjunto_simbolos_create(CADENA);
+
+    afnd->iteraciones = 0;
 
     return afnd;
 }
@@ -96,8 +114,8 @@ void AFNDElimina(AFND* afnd) {
         }
         estado_destroy(afnd->estados[i]);
     }   
-    // estado_destroy(afnd->estadoActual); esta incluido arriba
-    afnd->estadoActual = NULL;
+    // estado_destroy(afnd->id_actuales); esta incluido arriba
+    free(afnd->id_actuales);
     free(afnd->estados);
 
     /* Liberacion de simbolos y cadena */
@@ -166,11 +184,12 @@ void AFNDImprime(FILE *f, AFND* afnd) {
         fprintf(f, "\n");
     }
 
+    // TODO: imprimir bucle
     fprintf(f, "\tEstado actual: ");
-    if (!afnd->estadoActual) {
+    if (afnd->id_actuales[0] != SIN_INICIALIZAR) {
         fprintf(f, "-");
     } else {
-        print_estado(f, afnd->estadoActual);
+        print_estado(f, get_estado_from_id(afnd, afnd->id_actuales[0]));
     }
     fprintf(f, "\n");
 
@@ -214,7 +233,7 @@ void AFNDInicializaEstado(AFND* afnd) {
 
     for (i = 0; i < afnd->nest; i++) {
         if (get_tipo_estado(afnd->estados[i]) == INICIAL) {
-            afnd->estadoActual = afnd->estados[i];
+            afnd->id_actuales[0] = estado_get_id(afnd->estados[i]);
             break;
         }
     }
@@ -231,10 +250,98 @@ void AFNDImprimeCadenaActual(FILE* f, AFND* afnd) {
     return;
 }
 
-void AFNDProcesaEntrada(FILE* f, AFND* afnd) {
+/* ---------------------------------------------------------------------------- */
+int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
+    int len_cadena, i;
+    int* actuales_aux;
+
     if (!f || !afnd) {
         return;
     }
+
+    actuales_aux = (int *)malloc(sizeof(int) * afnd->nest);
+    if (!actuales_aux) {
+        return FALSE;
+    }
+
+    //Longitud de la cadena  de entrada 
+    len_cadena = get_num_simbolos(afnd->entrada);
+
+    while (hay_actuales(afnd) && afnd->iteraciones < len_cadena) {
+
+        for (i = 0; i < afnd->nest; i++) {
+            if (afnd->id_actuales[i] != SIN_INICIALIZAR) {
+
+
+            }
+            else {
+                break;
+            }
+            
+        }
+
+
+        resetear_actuales(afnd, afnd->id_actuales);
+    }
+
+    return algun_actual_final(afnd);
+
+    return;
+}
+/* ---------------------------------------------------------------------------- */
+
+
+Estado* get_estado_from_id(AFND* afnd, int id) {
+    if (!afnd || id < 0 || id > afnd->nest) {
+        return NULL;
+    }
+
+    if (afnd->estados[id] != NULL) {
+        return afnd->estados[id];
+    }
+    return NULL;
+}
+
+int hay_actuales(AFND* afnd) {
+    int i;
+
+    if (!afnd) {
+        return FALSE;
+    }
+    
+    if (afnd->id_actuales[0] != SIN_INICIALIZAR) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+int algun_actual_final(AFND* afnd) {
+    int i;
+
+    if (!afnd) {
+        return FALSE;
+    }
+
+    for (i = 0; i < afnd->nest; i++) {
+        if (afnd->id_actuales[i] != SIN_INICIALIZAR) {
+            if (get_tipo_estado(get_estado_from_id(afnd, afnd->id_actuales[i])) == FINAL) {
+                return TRUE;
+            }
+        }
+    }
+    return FALSE;
+}
+
+void resetear_actuales(AFND* afnd, int* ids) {
+    int i;
+
+    if (!ids) {
+        return;
+    }
+
+    for (i = 0; i <  afnd->nest; i++){
+        ids[i] = SIN_INICIALIZAR;
+    } 
 
     return;
 }

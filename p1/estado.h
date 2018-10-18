@@ -12,6 +12,8 @@ Módulo que implementa el TAD Estado
 #include <stdlib.h>
 #include <string.h>
 
+#define ERROR -1
+
 typedef struct _Estado Estado;
 
 typedef enum {
@@ -33,7 +35,7 @@ char* get_name_estado(Estado *estado);
 TIPO get_tipo_estado(Estado *estado);
 
 /** Obtenemos el  identificador de estado*/	
-TIPO get_id_estado(Estado *estado);
+TIPO estado_get_id(Estado *estado);
 
 /** Función que nos facilitará la impresión de un estado*/
 void print_estado(FILE* f, Estado *estado);

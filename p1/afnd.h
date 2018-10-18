@@ -12,6 +12,10 @@ Modulo que define el TAD automata finito no determinista.
 #include "conjunto_simbolos.h"
 #include "transicion.h"
 
+#define SIN_INICIALIZAR -1
+#define TRUE 1
+#define FALSE 0
+
 typedef struct _AFND AFND;
 
 /* 

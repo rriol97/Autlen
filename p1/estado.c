@@ -98,16 +98,17 @@ void print_estado(FILE* f, Estado* estado) {
 	}
 	if (!estado) {
 		fprintf(f, "-");
+		return;
 	}
 
 	fprintf(f, "%s (%s)", estado->nombre, texto_enum(estado->tipo));
 	return;
 }	
 
-TIPO get_id_estado(Estado *estado) {
+TIPO estado_get_id(Estado *estado) {
 
-	if (!estado){
-		return -1;
+	if (!estado) {
+		return ERROR;
 	}
 
 	return estado->id;	
