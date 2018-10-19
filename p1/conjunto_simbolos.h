@@ -39,7 +39,7 @@ int is_in_conjunto_simbolos(Conjunto_simbolos *conjunto_simbolos, char *sym);
 int get_num_simbolos(Conjunto_simbolos *conjunto_simbolos);
 
 /** Función que nos facilitará la impresión de un conjunto_simbolos*/
-void print_conjunto_simbolos(FILE *f, Conjunto_simbolos *conjunto_simbolos);
+void print_conjunto_simbolos(FILE *f, Conjunto_simbolos *conjunto_simbolos, int pos);
 
 
 #endif

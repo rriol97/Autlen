@@ -14,6 +14,7 @@ struct _AFND {
     int nest;
     Estado** estados;
     int* id_actuales;
+    int nactuales;
     /* SIMBOLOS Y CADENAS */
     int nsim;
     Conjunto_simbolos* alfabeto;
@@ -95,6 +96,7 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
     afnd->entrada = conjunto_simbolos_create(CADENA);
 
     afnd->iteraciones = 0;
+    afnd->nactuales = 0;
 
     return afnd;
 }
@@ -187,7 +189,7 @@ void AFNDImprime(FILE *f, AFND* afnd) {
 
     // TODO: imprimir bucle
     fprintf(f, "\tEstado actual: ");
-    if (afnd->id_actuales[0] != SIN_INICIALIZAR) {
+    if (afnd->nactuales == 0) {
         fprintf(f, "-");
     } else {
         print_estado(f, get_estado_from_id(afnd, afnd->id_actuales[0]));
@@ -196,10 +198,10 @@ void AFNDImprime(FILE *f, AFND* afnd) {
 
     /* Alfabeto y cadena */
     fprintf(f, "\tAlfabeto [%d]: ", afnd->nsim);
-    print_conjunto_simbolos(f, afnd->alfabeto);
+    print_conjunto_simbolos(f, afnd->alfabeto,0);
 
     fprintf(f, "\tCadena entrada: ");
-    print_conjunto_simbolos(f, afnd->entrada);
+    print_conjunto_simbolos(f, afnd->entrada,0);
 
     /* Transiciones */
     fprintf(f, "\tTablas de transiciones: ");
@@ -235,6 +237,7 @@ void AFNDInicializaEstado(AFND* afnd) {
     for (i = 0; i < afnd->nest; i++) {
         if (get_tipo_estado(afnd->estados[i]) == INICIAL) {
             afnd->id_actuales[0] = estado_get_id(afnd->estados[i]);
+            afnd->nactuales ++;
             break;
         }
     }
@@ -246,7 +249,7 @@ void AFNDImprimeCadenaActual(FILE* f, AFND* afnd) {
     }
 
     printf("Cadena entrante:\n");
-    print_conjunto_simbolos(f, afnd->entrada);
+    print_conjunto_simbolos(f, afnd->entrada,0);
 
     return;
 }
@@ -259,42 +262,49 @@ int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
     char* entrada_actual;
     int id_aux;
 
+    fprintf(f, "********************* Procesa Cadena *********************\n");
+
     if (!f || !afnd) {
+        fprintf(f, "Error: Error de fichero o de afnd\n");
         return FALSE;
     }
+
+    print_conjunto_simbolos(f, afnd->entrada, afnd->iteraciones);
 
     //Longitud de la cadena  de entrada 
     len_cadena = get_num_simbolos(afnd->entrada);
 
-    while (hay_actuales(afnd) && afnd->iteraciones < len_cadena) {
+    while (afnd->nactuales > 0 && afnd->iteraciones < len_cadena) {
+
+        fprintf(f, "ACTUALMENTE EN {->");
+        for (i = 0; i < afnd->nactuales; i++){
+            fprintf(f, "%s", get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])));    
+        }
+        fprintf(f, "}\n");
 
         actuales_aux = (int *)malloc(sizeof(int) * afnd->nest);
         if (!actuales_aux) {
+            fprintf(f, "Error: Error en array auxiliar\n");
             return FALSE;
         }
         resetear_actuales(afnd, actuales_aux);
 
         entrada_actual = entrada[afnd->iteraciones];
 
-        for (i = 0; i < afnd->nest; i++) {
-            if (afnd->id_actuales[i] != SIN_INICIALIZAR) {
-                for (j = 0; j < afnd->nest; j++){
-                    ret = get_valor_transicion(afnd->trans, entrada_actual, get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])), get_name_estado(afnd->estados[j]));
-                    if (ret == EXISTE) {
-                        id_aux = estado_get_id(afnd->estados[j]);
-                        if (sin_repetidos(actuales_aux, id_aux, afnd->nest)) {
-                            actuales_aux[cont] = id_aux;
-                            cont ++;
-                        }
+        for (i = 0; i < afnd->nactuales; i++) {
+            for (j = 0; j < afnd->nest; j++){
+                ret = get_valor_transicion(afnd->trans, entrada_actual, get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])), get_name_estado(afnd->estados[j]));
+                if (ret == EXISTE) {
+                    id_aux = estado_get_id(afnd->estados[j]);
+                    if (sin_repetidos(actuales_aux, id_aux, afnd->nactuales)) {
+                        actuales_aux[cont] = id_aux;
+                        cont ++;
                     }
                 }
             }
-            else {
-                break;
-            }
-            
         }
 
+        afnd->nactuales = cont;
         cont = 0;
         free(afnd->id_actuales);
         afnd->id_actuales = actuales_aux;
@@ -305,7 +315,6 @@ int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
 
     return algun_actual_final(afnd);
 
-    return;
 }
 /* ---------------------------------------------------------------------------- */
 
@@ -321,19 +330,6 @@ Estado* get_estado_from_id(AFND* afnd, int id) {
     return NULL;
 }
 
-int hay_actuales(AFND* afnd) {
-    int i;
-
-    if (!afnd) {
-        return FALSE;
-    }
-    
-    if (afnd->id_actuales[0] != SIN_INICIALIZAR) {
-        return TRUE;
-    }
-    return FALSE;
-}
-
 int algun_actual_final(AFND* afnd) {
     int i;
 
@@ -341,11 +337,9 @@ int algun_actual_final(AFND* afnd) {
         return FALSE;
     }
 
-    for (i = 0; i < afnd->nest; i++) {
-        if (afnd->id_actuales[i] != SIN_INICIALIZAR) {
-            if (get_tipo_estado(get_estado_from_id(afnd, afnd->id_actuales[i])) == FINAL) {
-                return TRUE;
-            }
+    for (i = 0; i < afnd->nactuales; i++) {
+        if (get_tipo_estado(get_estado_from_id(afnd, afnd->id_actuales[i])) == FINAL) {
+            return TRUE;
         }
     }
     return FALSE;
@@ -358,7 +352,7 @@ void resetear_actuales(AFND* afnd, int* ids) {
         return;
     }
 
-    for (i = 0; i <  afnd->nest; i++){
+    for (i = 0; i <  afnd->nactuales; i++){
         ids[i] = SIN_INICIALIZAR;
     } 
 

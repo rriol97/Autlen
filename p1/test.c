@@ -29,8 +29,8 @@ int main(int argc, char **argv) {
 	AFNDImprime(stdout, p_afnd);
 	fprintf(stdout,"\n*********************************************\n");
 
-	AFNDInsertaEstado(p_afnd,"q0",INICIAL);
-	AFNDInsertaEstado(p_afnd,"q1",NORMAL);
+	AFNDInsertaEstado(p_afnd,"q0",FINAL);
+	AFNDInsertaEstado(p_afnd,"q1",INICIAL);
 	AFNDInsertaEstado(p_afnd,"qf",FINAL);	
 
 	fprintf(stdout,"\n****************** AFND *********************\n");
@@ -61,6 +61,8 @@ int main(int argc, char **argv) {
 	fprintf(stdout,"\n****************** AFND *********************\n");
 	AFNDImprime(stdout, p_afnd);
 	fprintf(stdout,"\n*********************************************\n");
+
+
 
 	AFNDElimina(p_afnd);	
 
