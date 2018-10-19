@@ -53,9 +53,6 @@ Estado* estado_create(char *nombre, TIPO tipo, int id) {
 	}
 
 	strcpy(estado->nombre, nombre);
-	if (tipo == FINAL) {
-		strcat(estado->nombre, "*");
-	}
 	estado->tipo = tipo;
 	estado->id = id;
 
@@ -99,6 +96,10 @@ void print_estado(FILE* f, Estado* estado) {
 	if (!estado) {
 		fprintf(f, "-");
 		return;
+	}
+
+	if (estado->tipo == FINAL) {
+		fprintf(f, "%s* (%s)", estado->nombre, texto_enum(estado->tipo));
 	}
 
 	fprintf(f, "%s (%s)", estado->nombre, texto_enum(estado->tipo));

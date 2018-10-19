@@ -90,7 +90,7 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
         return NULL;
     }
 
-    resetear_actuales(afnd, afnd->id_actuales);
+    //resetear_actuales(afnd, afnd->id_actuales);
 
     afnd->trans = transicion_create(afnd->nsim, afnd->nest);
     afnd->entrada = conjunto_simbolos_create(CADENA);
@@ -263,24 +263,26 @@ int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
     int id_aux;
 
     fprintf(f, "********************* Procesa Cadena *********************\n");
+    print_conjunto_simbolos(f, afnd->entrada, 0);
+    fprintf(f, "**********************************************************\n");
 
     if (!f || !afnd) {
         fprintf(f, "Error: Error de fichero o de afnd\n");
         return FALSE;
     }
 
-    print_conjunto_simbolos(f, afnd->entrada, afnd->iteraciones);
-
     //Longitud de la cadena  de entrada 
     len_cadena = get_num_simbolos(afnd->entrada);
 
     while (afnd->nactuales > 0 && afnd->iteraciones < len_cadena) {
 
-        fprintf(f, "ACTUALMENTE EN {->");
+        fprintf(f, "ACTUALMENTE EN {-> ");
         for (i = 0; i < afnd->nactuales; i++){
-            fprintf(f, "%s", get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])));    
+            fprintf(f, "%s ", get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])));    
         }
         fprintf(f, "}\n");
+
+        print_conjunto_simbolos(f, afnd->entrada, afnd->iteraciones);
 
         actuales_aux = (int *)malloc(sizeof(int) * afnd->nest);
         if (!actuales_aux) {
@@ -298,7 +300,7 @@ int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
                     id_aux = estado_get_id(afnd->estados[j]);
                     if (sin_repetidos(actuales_aux, id_aux, afnd->nactuales)) {
                         actuales_aux[cont] = id_aux;
-                        cont ++;
+                        cont += 1;
                     }
                 }
             }
@@ -313,8 +315,19 @@ int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
         afnd->iteraciones++;
     }
 
-    return algun_actual_final(afnd);
 
+    fprintf(f, "ACTUALMENTE EN {-> ");
+    for (i = 0; i < afnd->nactuales; i++){
+        fprintf(f, "%s ", get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])));    
+    }
+    fprintf(f, "}\n");
+    print_conjunto_simbolos(f, afnd->entrada, afnd->iteraciones);
+
+    if (afnd->iteraciones == len_cadena){
+        return algun_actual_final(afnd);
+    }
+    
+    return FALSE;
 }
 /* ---------------------------------------------------------------------------- */
 

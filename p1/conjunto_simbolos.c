@@ -163,18 +163,26 @@ void print_conjunto_simbolos(FILE *f, Conjunto_simbolos *conjunto_simbolos, int 
 	int simbolo;
 
 	if (conjunto_simbolos->nsym == 0) {
-		printf("-\n");
+		fprintf(f, "-\n");
 		return;
 	}
 
 	if (strcmp (conjunto_simbolos->nombre, "Cadena") == 0) {
-		printf("[(%d) ", pos);
+
+		fprintf(f, "[(%d) ", conjunto_simbolos->nsym - pos);
 
 		for (simbolo = pos; simbolo < conjunto_simbolos->nsym - 1; simbolo++) {
 			printf("%s ", conjunto_simbolos->simbolos[simbolo]);
 		}
 
-		printf("%s]\n", conjunto_simbolos->simbolos[conjunto_simbolos->nsym - 1]);
+		if (pos >= conjunto_simbolos->nsym){
+			fprintf(f, "]\n");
+		}
+
+		else {
+			fprintf(f, "%s]\n", conjunto_simbolos->simbolos[conjunto_simbolos->nsym - 1]);
+		}
+
 	}
 
 	else {

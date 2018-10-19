@@ -12,7 +12,7 @@ Módulo que implementa el TAD conjunto_simbolos
 #include <stdlib.h>
 #include <string.h>
 
-#define CADENA "cadena"
+#define CADENA "Cadena"
 
 typedef struct _Conjunto_simbolos Conjunto_simbolos;
 
