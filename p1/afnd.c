@@ -7,51 +7,56 @@ Modulo para el TAD automata finito no determinista.
 #include "afnd.h"
 
 /** Estructura del AFND*/
-struct _AFND {
-	char *nombre;
+struct _AFND
+{
+    char *nombre;
     /* ESTADOS */
     int idEstados;
     int nest;
-    Estado** estados;
-    int* id_actuales;
+    Estado **estados;
+    int *id_actuales;
     int nactuales;
     /* SIMBOLOS Y CADENAS */
     int nsim;
-    Conjunto_simbolos* alfabeto;
-    Conjunto_simbolos* entrada;
+    Conjunto_simbolos *alfabeto;
+    Conjunto_simbolos *entrada;
     /* TRANSICIONES */
-    Transicion* trans;
+    Transicion *trans;
     int iteraciones;
 };
 
 /** Funciones privadas del modulo */
-Estado* get_estado_from_id(AFND* afnd, int id);
-int algun_actual_final(AFND* afnd);
-void resetear_actuales(AFND* afnd, int* ids);
-int sin_repetidos(int* actuales_aux, int id_aux, int tam);
-
+Estado *get_estado_from_id(AFND *afnd, int id);
+int algun_actual_final(AFND *afnd);
+void resetear_actuales(AFND *afnd, int *ids);
+int sin_repetidos(int *actuales_aux, int id_aux, int tam);
 
 /** Funciones del AFND */
-AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
-    AFND* afnd = NULL;
+AFND *AFNDNuevo(char *nombre, int nest, int nsim)
+{
+    AFND *afnd = NULL;
     int i;
 
-    if (!nombre || nest < 1 || nsim < 1) {
+    if (!nombre || nest < 1 || nsim < 1)
+    {
         return NULL;
     }
 
     afnd = (AFND *)malloc(sizeof(AFND));
-    if (!afnd) {
+    if (!afnd)
+    {
         return NULL;
     }
 
     /* nombre */
     afnd->nombre = (char *)malloc(sizeof(char) * (strlen(nombre) + 1));
-    if (!afnd->nombre) {
+    if (!afnd->nombre)
+    {
         free(afnd);
         return NULL;
     }
-    if (!strcpy(afnd->nombre, nombre)) {
+    if (!strcpy(afnd->nombre, nombre))
+    {
         free(afnd->nombre);
         free(afnd);
         return NULL;
@@ -62,18 +67,21 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
     afnd->nsim = nsim;
     afnd->idEstados = 0;
 
-    afnd->estados = (Estado **)malloc(sizeof(Estado*) * nest);
-    if (!afnd->estados) {
+    afnd->estados = (Estado **)malloc(sizeof(Estado *) * nest);
+    if (!afnd->estados)
+    {
         free(afnd->nombre);
         free(afnd);
         return NULL;
     }
-    for (i = 0; i < nest; i++) {
+    for (i = 0; i < nest; i++)
+    {
         afnd->estados[i] = NULL;
     }
 
     afnd->alfabeto = conjunto_simbolos_create("A");
-    if (!afnd->alfabeto) {
+    if (!afnd->alfabeto)
+    {
         free(afnd->estados);
         free(afnd->nombre);
         free(afnd);
@@ -82,7 +90,8 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
 
     /* Transiciones, Entreda y Estado actual */
     afnd->id_actuales = (int *)malloc(sizeof(int) * nest);
-    if (!afnd->id_actuales) {
+    if (!afnd->id_actuales)
+    {
         free(afnd->alfabeto);
         free(afnd->estados);
         free(afnd->nombre);
@@ -101,22 +110,26 @@ AFND* AFNDNuevo(char* nombre, int nest, int nsim) {
     return afnd;
 }
 
-void AFNDElimina(AFND* afnd) {
-    int i; 
+void AFNDElimina(AFND *afnd)
+{
+    int i;
 
-    if (!afnd) {
+    if (!afnd)
+    {
         return;
     }
 
     free(afnd->nombre);
 
     /* Liberacion estados */
-    for (i = 0; i < afnd->nest; i++) {
-        if (!afnd->estados[i]) {
+    for (i = 0; i < afnd->nest; i++)
+    {
+        if (!afnd->estados[i])
+        {
             break;
         }
         estado_destroy(afnd->estados[i]);
-    }   
+    }
     // estado_destroy(afnd->id_actuales); esta incluido arriba
     free(afnd->id_actuales);
     free(afnd->estados);
@@ -133,27 +146,33 @@ void AFNDElimina(AFND* afnd) {
     return;
 }
 
-void AFNDInsertaSimbolo(AFND* afnd, char* sim) {
-    if (!afnd || !sim) {
+void AFNDInsertaSimbolo(AFND *afnd, char *sim)
+{
+    if (!afnd || !sim)
+    {
         return;
     }
     insert_simbolo(afnd->alfabeto, sim);
 }
 
-void AFNDInsertaEstado(AFND* afnd, char* nombre, int tipo) {
-    if (!afnd || !nombre || tipo < INICIAL || tipo > FINAL) {
+void AFNDInsertaEstado(AFND *afnd, char *nombre, int tipo)
+{
+    if (!afnd || !nombre || tipo < INICIAL || tipo > FINAL)
+    {
         return;
     }
-    
+
     afnd->estados[afnd->idEstados] = estado_create(nombre, tipo, afnd->idEstados);
     afnd->idEstados++;
 
     return;
 }
 
-void AFNDInsertaTransicion(AFND* afnd, char* nombreEstadoSalida, char* nombreSim, char* nombreEstadoLlegada) {
-    
-    if (!afnd || !nombreEstadoSalida || !nombreSim || !nombreEstadoLlegada) {
+void AFNDInsertaTransicion(AFND *afnd, char *nombreEstadoSalida, char *nombreSim, char *nombreEstadoLlegada)
+{
+
+    if (!afnd || !nombreEstadoSalida || !nombreSim || !nombreEstadoLlegada)
+    {
         return;
     }
 
@@ -163,10 +182,12 @@ void AFNDInsertaTransicion(AFND* afnd, char* nombreEstadoSalida, char* nombreSim
     return;
 }
 
-void AFNDImprime(FILE *f, AFND* afnd) {
+void AFNDImprime(FILE *f, AFND *afnd)
+{
     int i;
 
-    if (!afnd) {
+    if (!afnd)
+    {
         fprintf(f, "AFND vacio\n");
         return;
     }
@@ -175,40 +196,50 @@ void AFNDImprime(FILE *f, AFND* afnd) {
 
     /* Estados */
     fprintf(f, "\tEstados [%d]: ", afnd->nest);
-    if (afnd->idEstados == 0) {
+    if (afnd->idEstados == 0)
+    {
         fprintf(f, "-\n");
     }
-    else {
+    else
+    {
         print_estado(f, afnd->estados[0]);
-        for (i = 1; i < afnd->nest; i++) {
+        for (i = 1; i < afnd->nest; i++)
+        {
             fprintf(f, ", ");
             print_estado(f, afnd->estados[i]);
         }
         fprintf(f, "\n");
     }
 
-    // TODO: imprimir bucle
-    fprintf(f, "\tEstado actual: ");
-    if (afnd->nactuales == 0) {
+    fprintf(f, "\tEstados actuales: ");
+    if (afnd->nactuales == 0)
+    {
         fprintf(f, "-");
-    } else {
-        print_estado(f, get_estado_from_id(afnd, afnd->id_actuales[0]));
+    }
+    else
+    {
+        for (i = 0; i < afnd->nactuales; i++)
+        {
+            print_estado(f, get_estado_from_id(afnd, afnd->id_actuales[i]));
+        }
     }
     fprintf(f, "\n");
 
     /* Alfabeto y cadena */
     fprintf(f, "\tAlfabeto [%d]: ", afnd->nsim);
-    print_conjunto_simbolos(f, afnd->alfabeto,0);
+    print_conjunto_simbolos(f, afnd->alfabeto, 0);
 
     fprintf(f, "\tCadena entrada: ");
-    print_conjunto_simbolos(f, afnd->entrada,0);
+    print_conjunto_simbolos(f, afnd->entrada, 0);
 
     /* Transiciones */
     fprintf(f, "\tTablas de transiciones: ");
-    if (!afnd->trans) {
+    if (!afnd->trans)
+    {
         fprintf(f, "-\n");
     }
-    else {
+    else
+    {
         transicion_print(f, afnd->trans);
     }
 
@@ -217,8 +248,10 @@ void AFNDImprime(FILE *f, AFND* afnd) {
     return;
 }
 
-AFND* AFNDInsertaLetra(AFND* afnd, char* nombreLetra) {
-    if (!afnd || !nombreLetra) {
+AFND *AFNDInsertaLetra(AFND *afnd, char *nombreLetra)
+{
+    if (!afnd || !nombreLetra)
+    {
         return NULL;
     }
 
@@ -226,66 +259,70 @@ AFND* AFNDInsertaLetra(AFND* afnd, char* nombreLetra) {
     return afnd;
 }
 
-
-void AFNDInicializaEstado(AFND* afnd) {
+void AFNDInicializaEstado(AFND *afnd)
+{
     int i;
 
-    if (!afnd) {
+    if (!afnd)
+    {
         return;
     }
 
-    for (i = 0; i < afnd->nest; i++) {
-        if (get_tipo_estado(afnd->estados[i]) == INICIAL) {
-            afnd->id_actuales[0] = estado_get_id(afnd->estados[i]);
-            afnd->nactuales ++;
-            break;
+    for (i = 0; i < afnd->nest; i++)
+    {
+        if (get_tipo_estado(afnd->estados[i]) == INICIAL || get_tipo_estado(afnd->estados[i]) == INICIAL_y_FINAL)
+        {
+            afnd->id_actuales[afnd->nactuales] = estado_get_id(afnd->estados[i]);
+            afnd->nactuales++;
         }
     }
 }
 
-void AFNDImprimeCadenaActual(FILE* f, AFND* afnd) {
-    if (!f || !afnd) {
+void AFNDImprimeCadenaActual(FILE *f, AFND *afnd)
+{
+    if (!f || !afnd)
+    {
         return;
     }
 
-    printf("Cadena entrante:\n");
-    print_conjunto_simbolos(f, afnd->entrada,0);
+    print_conjunto_simbolos(f, afnd->entrada, 0);
 
     return;
 }
 
 /* ---------------------------------------------------------------------------- */
-int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
+int AFNDProcesaEntrada(FILE *f, AFND *afnd)
+{
     int len_cadena, i, j, ret, cont = 0;
-    int* actuales_aux;
-    char** entrada = get_simbolos(afnd->entrada);
-    char* entrada_actual;
+    int *actuales_aux;
+    char **entrada = get_simbolos(afnd->entrada);
+    char *entrada_actual;
     int id_aux;
 
-    fprintf(f, "********************* Procesa Cadena *********************\n");
-    print_conjunto_simbolos(f, afnd->entrada, 0);
-    fprintf(f, "**********************************************************\n");
-
-    if (!f || !afnd) {
+    if (!f || !afnd)
+    {
         fprintf(f, "Error: Error de fichero o de afnd\n");
         return FALSE;
     }
 
-    //Longitud de la cadena  de entrada 
+    //Longitud de la cadena  de entrada
     len_cadena = get_num_simbolos(afnd->entrada);
 
-    while (afnd->nactuales > 0 && afnd->iteraciones < len_cadena) {
+    while (afnd->nactuales > 0 && afnd->iteraciones < len_cadena)
+    {
 
-        fprintf(f, "ACTUALMENTE EN {-> ");
-        for (i = 0; i < afnd->nactuales; i++){
-            fprintf(f, "%s ", get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])));    
+        fprintf(f, "ACTUALMENTE EN {%s", get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[0])));
+        for (i = 1; i < afnd->nactuales; i++)
+        {
+            fprintf(f, ", %s", get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])));
         }
         fprintf(f, "}\n");
 
         print_conjunto_simbolos(f, afnd->entrada, afnd->iteraciones);
 
         actuales_aux = (int *)malloc(sizeof(int) * afnd->nest);
-        if (!actuales_aux) {
+        if (!actuales_aux)
+        {
             fprintf(f, "Error: Error en array auxiliar\n");
             return FALSE;
         }
@@ -293,12 +330,16 @@ int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
 
         entrada_actual = entrada[afnd->iteraciones];
 
-        for (i = 0; i < afnd->nactuales; i++) {
-            for (j = 0; j < afnd->nest; j++){
+        for (i = 0; i < afnd->nactuales; i++)
+        {
+            for (j = 0; j < afnd->nest; j++)
+            {
                 ret = get_valor_transicion(afnd->trans, entrada_actual, get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])), get_name_estado(afnd->estados[j]));
-                if (ret == EXISTE) {
+                if (ret == EXISTE)
+                {
                     id_aux = estado_get_id(afnd->estados[j]);
-                    if (sin_repetidos(actuales_aux, id_aux, afnd->nactuales)) {
+                    if (sin_repetidos(actuales_aux, id_aux, afnd->nactuales))
+                    {
                         actuales_aux[cont] = id_aux;
                         cont += 1;
                     }
@@ -315,68 +356,105 @@ int AFNDProcesaEntrada(FILE* f, AFND* afnd) {
         afnd->iteraciones++;
     }
 
-
-    fprintf(f, "ACTUALMENTE EN {-> ");
-    for (i = 0; i < afnd->nactuales; i++){
-        fprintf(f, "%s ", get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])));    
+    if (afnd->nactuales == 0)
+    {
+        fprintf(f, "ACABAMOS SIN ESTADOS FINALES ");
     }
+    else
+    {
+        fprintf(f, "ACABAMOS EN {%s", get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[0])));
+        for (i = 1; i < afnd->nactuales; i++)
+        {
+            fprintf(f, ", %s", get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])));
+        }
+    }
+
     fprintf(f, "}\n");
     print_conjunto_simbolos(f, afnd->entrada, afnd->iteraciones);
 
-    if (afnd->iteraciones == len_cadena){
-        return algun_actual_final(afnd);
+    ret = FALSE;
+    if (afnd->iteraciones == len_cadena)
+    {
+        ret = algun_actual_final(afnd);
     }
-    
-    return FALSE;
+
+    afnd->nactuales = 0;
+    afnd->iteraciones = 0;
+    conjunto_simbolos_destroy(afnd->entrada);
+    afnd->entrada = conjunto_simbolos_create(CADENA);
+
+    if (ret == TRUE)
+    {
+        fprintf(f, "> Cadena aceptada <\n");
+    }
+    else
+    {
+        fprintf(f, "> Cadena rechazada <\n");
+    }
+
+    return ret;
 }
 /* ---------------------------------------------------------------------------- */
 
-
-Estado* get_estado_from_id(AFND* afnd, int id) {
-    if (!afnd || id < 0 || id > afnd->nest) {
+Estado *get_estado_from_id(AFND *afnd, int id)
+{
+    if (!afnd || id < 0 || id > afnd->nest)
+    {
         return NULL;
     }
 
-    if (afnd->estados[id] != NULL) {
+    if (afnd->estados[id] != NULL)
+    {
         return afnd->estados[id];
     }
     return NULL;
 }
 
-int algun_actual_final(AFND* afnd) {
+int algun_actual_final(AFND *afnd)
+{
     int i;
 
-    if (!afnd) {
+    if (!afnd)
+    {
         return FALSE;
     }
 
-    for (i = 0; i < afnd->nactuales; i++) {
-        if (get_tipo_estado(get_estado_from_id(afnd, afnd->id_actuales[i])) == FINAL) {
+    for (i = 0; i < afnd->nactuales; i++)
+    {
+        if (get_tipo_estado(get_estado_from_id(afnd, afnd->id_actuales[i])) == FINAL ||
+            get_tipo_estado(get_estado_from_id(afnd, afnd->id_actuales[i])) == INICIAL_y_FINAL)
+        {
             return TRUE;
         }
     }
     return FALSE;
 }
 
-void resetear_actuales(AFND* afnd, int* ids) {
+void resetear_actuales(AFND *afnd, int *ids)
+{
     int i;
 
-    if (!ids) {
+    if (!ids)
+    {
         return;
     }
 
-    for (i = 0; i <  afnd->nactuales; i++){
+    for (i = 0; i < afnd->nactuales; i++)
+    {
         ids[i] = SIN_INICIALIZAR;
-    } 
+    }
 
     return;
 }
 
-int sin_repetidos(int* actuales_aux, int id_aux, int tam) {
+int sin_repetidos(int *actuales_aux, int id_aux, int tam)
+{
     int i;
 
-    for (i = 0; i < tam; i++) {
-        if (actuales_aux[i] == id_aux) {
+    for (i = 0; i < tam; i++)
+    {
+        if (actuales_aux[i] == id_aux)
+        {
             return FALSE;
         }
     }

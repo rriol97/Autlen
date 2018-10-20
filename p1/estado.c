@@ -7,47 +7,57 @@ Módulo que implementa el TAD Estado
 #include "estado.h"
 
 /** Estructura de estado*/
-struct _Estado {
+struct _Estado
+{
 	int id;
-    char *nombre;
-    TIPO tipo;
+	char *nombre;
+	TIPO tipo;
 };
 
 /** Funciones privadas */
-char* texto_enum(TIPO t) {
-	if (t == INICIAL){
+char *texto_enum(TIPO t)
+{
+	if (t == INICIAL)
+	{
 		return "Inicial";
 	}
 
-	else if (t == FINAL) {
+	else if (t == FINAL)
+	{
 		return "Final";
 	}
 
-	else if (t == NORMAL) {
+	else if (t == NORMAL)
+	{
 		return "Normal";
 	}
 
-	else {
+	else
+	{
 		return "Inicial y final";
 	}
 }
 
 /** Funciones a implementar */
-Estado* estado_create(char *nombre, TIPO tipo, int id) {
+Estado *estado_create(char *nombre, TIPO tipo, int id)
+{
 	Estado *estado = NULL;
 
-	if (!nombre) {
+	if (!nombre)
+	{
 		return NULL;
 	}
 
-	estado = (Estado*) malloc(sizeof(Estado)); /**Reservamos memoria para un estado*/
-	if (!estado){
+	estado = (Estado *)malloc(sizeof(Estado)); /**Reservamos memoria para un estado*/
+	if (!estado)
+	{
 		return NULL;
 	}
 
 	// +2 para fin de cadena y posible asterisco
-	estado->nombre = (char*) malloc(sizeof(char) * strlen(nombre) + 2);
-	if (!estado->nombre){
+	estado->nombre = (char *)malloc(sizeof(char) * strlen(nombre) + 2);
+	if (!estado->nombre)
+	{
 		free(estado);
 		return NULL;
 	}
@@ -59,9 +69,11 @@ Estado* estado_create(char *nombre, TIPO tipo, int id) {
 	return estado;
 }
 
-void estado_destroy(Estado *estado) {
+void estado_destroy(Estado *estado)
+{
 
-	if (!estado) {
+	if (!estado)
+	{
 		return;
 	}
 
@@ -70,59 +82,67 @@ void estado_destroy(Estado *estado) {
 	return;
 }
 
-char* get_name_estado(Estado* estado) {
+char *get_name_estado(Estado *estado)
+{
 
-	if (!estado){
+	if (!estado)
+	{
 		return NULL;
 	}
 
 	return estado->nombre;
 }
 
-TIPO get_tipo_estado(Estado *estado) {
+TIPO get_tipo_estado(Estado *estado)
+{
 
-	if (!estado){
+	if (!estado)
+	{
 		return -1;
 	}
 
-	return estado->tipo;	
+	return estado->tipo;
 }
 
-void print_estado(FILE* f, Estado* estado) {
+void print_estado(FILE *f, Estado *estado)
+{
 
-	if (!f) {
+	if (!f)
+	{
 		return;
 	}
-	if (!estado) {
+	if (!estado)
+	{
 		fprintf(f, "-");
 		return;
 	}
 
-	if (estado->tipo == FINAL) {
-		fprintf(f, "%s* (%s)", estado->nombre, texto_enum(estado->tipo));
-	}
-
 	fprintf(f, "%s (%s)", estado->nombre, texto_enum(estado->tipo));
 	return;
-}	
+}
 
-TIPO estado_get_id(Estado *estado) {
+TIPO estado_get_id(Estado *estado)
+{
 
-	if (!estado) {
+	if (!estado)
+	{
 		return ERROR;
 	}
 
-	return estado->id;	
+	return estado->id;
 }
 
 /*Funcion que compara dos estados: devuelve 1 si son iguales y 0 en caso contrario**/
-int estado_equal(Estado *estado1, Estado *estado2){
+int estado_equal(Estado *estado1, Estado *estado2)
+{
 
-	if (!estado1 || !estado2){
+	if (!estado1 || !estado2)
+	{
 		return -1;
 	}
 
-	if (estado1->id == estado2->id){
+	if (estado1->id == estado2->id)
+	{
 		return 1;
 	}
 

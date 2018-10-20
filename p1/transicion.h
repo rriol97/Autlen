@@ -21,18 +21,18 @@ typedef struct _Transicion Transicion;
 /** Funciones */
 
 /**Creamos e inicializamos una transicion nueva*/
-Transicion* transicion_create(int num_simb, int num_estados);
+Transicion *transicion_create(int num_simb, int num_estados);
 
 /** Liberamos la memoria de una transicion*/
 void transicion_destroy(Transicion *transicion);
 
 /**Obtenemos el valor de la transicion*/
-int get_valor_transicion(Transicion *transicion, char* simbolo, char* estado1, char* estado2);
+int get_valor_transicion(Transicion *transicion, char *simbolo, char *estado1, char *estado2);
 
 /**Obtenemos el valor de la transicion*/
-void set_valor_transicion(Transicion *transicion, char* simbolo, char* estado1, char* estado2);
+void set_valor_transicion(Transicion *transicion, char *simbolo, char *estado1, char *estado2);
 
 /**Imprimir tabla de simbolos*/
-void transicion_print(FILE* f, Transicion *transicion);
+void transicion_print(FILE *f, Transicion *transicion);
 
 #endif

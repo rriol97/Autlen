@@ -16,29 +16,33 @@ Módulo que implementa el TAD Estado
 
 typedef struct _Estado Estado;
 
-typedef enum {
-    INICIAL, NORMAL, INICIAL_y_FINAL, FINAL
+typedef enum
+{
+    INICIAL,
+    NORMAL,
+    INICIAL_y_FINAL,
+    FINAL
 } TIPO;
 
 /** Funciones */
 
 /**Creamos e inicializamos un estado nuevo*/
-Estado* estado_create(char *nombre, TIPO tipo, int id);
+Estado *estado_create(char *nombre, TIPO tipo, int id);
 
 /**Liberamos la memoria de un estado*/
 void estado_destroy(Estado *estado);
 
 /**Obtener el nombre del estado*/
-char* get_name_estado(Estado *estado);
+char *get_name_estado(Estado *estado);
 
-/** Obtenemos el tipo de estado (Inicial, final o normal)*/	
+/** Obtenemos el tipo de estado (Inicial, final o normal)*/
 TIPO get_tipo_estado(Estado *estado);
 
-/** Obtenemos el  identificador de estado*/	
+/** Obtenemos el  identificador de estado*/
 TIPO estado_get_id(Estado *estado);
 
 /** Función que nos facilitará la impresión de un estado*/
-void print_estado(FILE* f, Estado *estado);
+void print_estado(FILE *f, Estado *estado);
 
 /*Funcion que compara dos estados: devuelve 1 si son iguales y 0 en caso contrario**/
 int estado_equal(Estado *estado1, Estado *estado2);

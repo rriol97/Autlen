@@ -27,7 +27,7 @@ args:
     -nsim: numero simbolos
 retorno: retorno al AFND creado
 */
-AFND* AFNDNuevo(char* nombre, int nest, int nsim);
+AFND *AFNDNuevo(char *nombre, int nest, int nsim);
 
 /* 
 nombre: AFNDElimina
@@ -36,7 +36,7 @@ args:
     -afnd: automata a eliminar
 retorno: -
 */
-void AFNDElimina(AFND* afnd);
+void AFNDElimina(AFND *afnd);
 
 /* 
 nombre: AFNDInsertaSimbolo
@@ -46,7 +46,7 @@ args:
     -sim: simbolo a introducir
 retorno: -
 */
-void AFNDInsertaSimbolo(AFND* afnd, char* sim);
+void AFNDInsertaSimbolo(AFND *afnd, char *sim);
 
 /* 
 nombre: AFNDInsertaEstado
@@ -57,7 +57,7 @@ args:
     -tipo: tipo del estado a anadir
 retorno: -
 */
-void AFNDInsertaEstado(AFND* afnd, char* nombre, int tipo);
+void AFNDInsertaEstado(AFND *afnd, char *nombre, int tipo);
 
 /* 
 nombre: AFNDInsertaTransicion
@@ -69,7 +69,7 @@ args:
     -nombreEstadoLlegada: nombre del estado distino
 retorno: -
 */
-void AFNDInsertaTransicion(AFND* afnd, char* nombreEstadoSalida, char* nombreSim, char* nombreEstadoLlegada);
+void AFNDInsertaTransicion(AFND *afnd, char *nombreEstadoSalida, char *nombreSim, char *nombreEstadoLlegada);
 
 /* 
 nombre: AFNDImprime
@@ -79,7 +79,7 @@ args:
     -afnd: automata a imprimir
 retorno: -
 */
-void AFNDImprime(FILE *f, AFND* afnd);
+void AFNDImprime(FILE *f, AFND *afnd);
 
 /* 
 nombre: AFNDInsertaLetra
@@ -89,7 +89,7 @@ args:
     -nombreLetra: nombre del simbolo a introducir
 retorno: puntero al automata
 */
-AFND* AFNDInsertaLetra(AFND* afnd, char* nombreLetra);
+AFND *AFNDInsertaLetra(AFND *afnd, char *nombreLetra);
 
 /* 
 nombre: AFNDInicializaEstado
@@ -98,7 +98,7 @@ args:
     -afnd: automata a modificar
 retorno: -
 */
-void AFNDInicializaEstado(AFND* afnd);
+void AFNDInicializaEstado(AFND *afnd);
 
 /* 
 nombre: AFNDImprimeCadenaActual
@@ -108,7 +108,7 @@ args:
     -afnd: automata a modificar
 retorno: -
 */
-void AFNDImprimeCadenaActual(FILE* f, AFND* afnd);
+void AFNDImprimeCadenaActual(FILE *f, AFND *afnd);
 
 /* 
 nombre: AFNDProcesaEntrada
@@ -118,4 +118,4 @@ args:
     -afnd: automata a imprimir
 retorno: -
 */
-int AFNDProcesaEntrada(FILE* f, AFND* afnd);
+int AFNDProcesaEntrada(FILE *f, AFND *afnd);
