@@ -175,8 +175,11 @@ void AFNDInsertaTransicion(AFND *afnd, char *nombreEstadoSalida, char *nombreSim
     {
         return;
     }
+    if (!strcmp(nombreSim, LAMBDA)) {
+        frpintf(stderr, "No esta permitido el uso de simbolos llamados 'lambda'\n");
+        return;
+    }
 
-    //Funcion para insertar transiciones?
     set_valor_transicion(afnd->trans, nombreSim, nombreEstadoSalida, nombreEstadoLlegada);
 
     return;
@@ -395,6 +398,49 @@ int AFNDProcesaEntrada(FILE *f, AFND *afnd)
     return ret;
 }
 /* ---------------------------------------------------------------------------- */
+
+AFND * AFNDInsertaLTransicion(AFND *afnd, char *q0, char *qf) {
+    
+    if (!afnd || !q0 || !qf) {
+        return NULL;
+    }
+
+    set_valor_transicion(afnd->trans, LAMBDA, q0, qf);
+
+    return afnd;
+}
+
+
+AFND * AFNDCierraLTransicion(AFND *afnd) {
+    int i;
+    char *nombre_estado;
+
+    if (!afnd) {
+        return NULL;
+    }
+
+    transicion_inducir(afnd->trans);
+
+    for (i = 0; i < afnd->nest; i++) {
+        nombre_estado = get_name_estado(afnd->estados[i]);
+		set_valor_transicion(afnd->trans, LAMBDA, nombre_estado, nombre_estado);
+	}
+
+
+    return afnd;
+}
+
+
+AFND * AFNDInicializaCadenaActual(AFND* afnd) {
+
+    if (!afnd) {
+        return NULL;
+    }
+
+    return afnd;
+}
+
+/* -------------------- FUNCIONES PRIVADAS ----------------------------- */
 
 Estado *get_estado_from_id(AFND *afnd, int id)
 {

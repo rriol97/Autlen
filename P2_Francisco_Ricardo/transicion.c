@@ -31,6 +31,7 @@ Transicion *transicion_create(int num_simb, int num_estados)
 {
 	int i, k, j;
 	Transicion *trans = NULL;
+	num_simb++; /* Capa adicional para lambdas */
 
 	if (num_estados == 0 || num_simb == 0)
 	{
@@ -44,7 +45,7 @@ Transicion *transicion_create(int num_simb, int num_estados)
 	}
 
 	/* Tabla de transiciones */
-	trans->transiciones = (int ***)malloc(sizeof(int **) * num_simb);
+	trans->transiciones = (int ***)malloc(sizeof(int **) * (num_simb));
 	if (!trans->transiciones)
 	{
 		free(trans);
@@ -277,6 +278,28 @@ void transicion_print(FILE *f, Transicion *transicion)
 
 	return;
 }
+
+void transicion_inducir(Transicion * t) {
+	int i;
+
+	if (!t) {
+		return;
+	}
+
+	for (i = 0; i < t->nest; i++) {
+		//Mirar si el estado tiene lambdas
+		if () {
+			//Mirar si alguno de los est accesibles por lambdas tiene lambdas
+
+		}
+
+
+	}
+
+	return;
+}
+
+/* --------------------- FUNCIONES PRIVADAS ---------------------- */
 
 int mapear_simbolo(Transicion *t, char *sim)
 {

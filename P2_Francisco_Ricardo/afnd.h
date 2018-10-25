@@ -115,7 +115,36 @@ nombre: AFNDProcesaEntrada
 desc: algoritmo para procesar un afnd
 args:
     -f: fichero para mostrar el desarrollo
-    -afnd: automata a imprimir
+    -afnd: automata a procesar
 retorno: -
 */
 int AFNDProcesaEntrada(FILE *f, AFND *afnd);
+
+/* 
+nombre: AFNDInsertaLTransicion
+desc: permite insertar transiciones lambda
+args:
+    -afnd: automata a modificar
+    -q0: estado origen
+    -q1: estado destino
+retorno: -
+*/
+AFND * AFNDInsertaLTransicion(AFND *afnd, char *q0, char *qf);
+
+/* 
+nombre: AFNDCierraLTransicion
+desc: induce las obtenidas por transitividad
+args:
+    -afnd: automata a modificar
+retorno: -
+*/
+AFND * AFNDCierraLTransicion(AFND *afnd);
+
+/* 
+nombre: AFNDInicializaCadenaActual
+desc: prepara el afnd para introducir una nueva cadena
+args:
+    -afnd: automata a preparar
+retorno: puntero a AFND
+*/
+AFND * AFNDInicializaCadenaActual(AFND* afnd);

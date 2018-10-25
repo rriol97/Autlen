@@ -13,6 +13,7 @@ Módulo que implementa el TAD Transicion.
 #define NO_EXISTE 0
 #define EXISTE 1
 #define ERR -1
+#define LAMBDA "lambda"
 
 #define TAM 32 // tamano maximo para nombres de simbolos y estados
 
@@ -34,5 +35,8 @@ void set_valor_transicion(Transicion *transicion, char *simbolo, char *estado1, 
 
 /**Imprimir tabla de simbolos*/
 void transicion_print(FILE *f, Transicion *transicion);
+
+/**Induce transiciones por transitividad*/
+void transicion_inducir(Transicion * t);
 
 #endif
