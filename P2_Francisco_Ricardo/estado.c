@@ -121,7 +121,7 @@ void print_estado(FILE *f, Estado *estado)
 	return;
 }
 
-TIPO estado_get_id(Estado *estado)
+int estado_get_id(Estado *estado)
 {
 
 	if (!estado)

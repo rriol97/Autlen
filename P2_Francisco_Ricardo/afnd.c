@@ -176,7 +176,7 @@ void AFNDInsertaTransicion(AFND *afnd, char *nombreEstadoSalida, char *nombreSim
         return;
     }
     if (!strcmp(nombreSim, LAMBDA)) {
-        frpintf(stderr, "No esta permitido el uso de simbolos llamados 'lambda'\n");
+        fprintf(stderr, "No esta permitido el uso de simbolos llamados 'lambda'\n");
         return;
     }
 
@@ -262,13 +262,13 @@ AFND *AFNDInsertaLetra(AFND *afnd, char *nombreLetra)
     return afnd;
 }
 
-void AFNDInicializaEstado(AFND *afnd)
+AFND *AFNDInicializaEstado(AFND *afnd)
 {
     int i;
 
     if (!afnd)
     {
-        return;
+        return NULL;
     }
 
     for (i = 0; i < afnd->nest; i++)
@@ -279,6 +279,8 @@ void AFNDInicializaEstado(AFND *afnd)
             afnd->nactuales++;
         }
     }
+
+    return afnd;
 }
 
 void AFNDImprimeCadenaActual(FILE *f, AFND *afnd)
@@ -296,7 +298,7 @@ void AFNDImprimeCadenaActual(FILE *f, AFND *afnd)
 /* ---------------------------------------------------------------------------- */
 int AFNDProcesaEntrada(FILE *f, AFND *afnd)
 {
-    int len_cadena, i, j, ret, cont = 0;
+    int len_cadena, i, j, ret, cont = 0, h;
     int *actuales_aux;
     char **entrada = get_simbolos(afnd->entrada);
     char *entrada_actual;
@@ -310,6 +312,15 @@ int AFNDProcesaEntrada(FILE *f, AFND *afnd)
 
     //Longitud de la cadena  de entrada
     len_cadena = get_num_simbolos(afnd->entrada);
+
+    //Actualizamos los estados actuales
+    for (i = 0; i < afnd->nest; i++) {
+        ret = get_valor_transicion(afnd->trans, LAMBDA, get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[0])), get_name_estado(afnd->estados[i]));
+        if (ret == EXISTE) {
+            afnd->id_actuales[afnd->nactuales] = estado_get_id(afnd->estados[i]);
+            afnd->nactuales ++;
+        }
+    }
 
     while (afnd->nactuales > 0 && afnd->iteraciones < len_cadena)
     {
@@ -341,10 +352,19 @@ int AFNDProcesaEntrada(FILE *f, AFND *afnd)
                 if (ret == EXISTE)
                 {
                     id_aux = estado_get_id(afnd->estados[j]);
-                    if (sin_repetidos(actuales_aux, id_aux, afnd->nactuales))
+                    if (sin_repetidos(actuales_aux, id_aux, cont))
                     {
                         actuales_aux[cont] = id_aux;
                         cont += 1;
+                        //Metemos tambien los inducidos por lambdas
+                        for (h = 0; h < afnd->nest; h++) {
+                            ret = get_valor_transicion(afnd->trans, LAMBDA, get_name_estado(get_estado_from_id(afnd, id_aux)), get_name_estado(afnd->estados[h]));
+                            if (ret == EXISTE) {
+                                actuales_aux[cont] = estado_get_id(afnd->estados[h]);
+                                cont += 1;
+                            }
+                        }
+
                     }
                 }
             }
@@ -383,8 +403,6 @@ int AFNDProcesaEntrada(FILE *f, AFND *afnd)
 
     afnd->nactuales = 0;
     afnd->iteraciones = 0;
-    conjunto_simbolos_destroy(afnd->entrada);
-    afnd->entrada = conjunto_simbolos_create(CADENA);
 
     if (ret == TRUE)
     {
@@ -412,8 +430,8 @@ AFND * AFNDInsertaLTransicion(AFND *afnd, char *q0, char *qf) {
 
 
 AFND * AFNDCierraLTransicion(AFND *afnd) {
-    int i;
-    char *nombre_estado;
+    //int i;
+    //char *nombre_estado;
 
     if (!afnd) {
         return NULL;
@@ -421,12 +439,13 @@ AFND * AFNDCierraLTransicion(AFND *afnd) {
 
     transicion_inducir(afnd->trans);
 
+/**
     for (i = 0; i < afnd->nest; i++) {
         nombre_estado = get_name_estado(afnd->estados[i]);
 		set_valor_transicion(afnd->trans, LAMBDA, nombre_estado, nombre_estado);
 	}
 
-
+**/
     return afnd;
 }
 
@@ -436,6 +455,9 @@ AFND * AFNDInicializaCadenaActual(AFND* afnd) {
     if (!afnd) {
         return NULL;
     }
+
+    conjunto_simbolos_destroy(afnd->entrada);
+    afnd->entrada = conjunto_simbolos_create(CADENA);
 
     return afnd;
 }

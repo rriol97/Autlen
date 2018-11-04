@@ -18,11 +18,14 @@ struct _Transicion
 	int nest;
 	char **simbolos;
 	char **estados;
+
+
 };
 
 /* Declaracion funciones privadas */
 int mapear_estado(Transicion *t, char *est);
 int mapear_simbolo(Transicion *t, char *sim);
+int * transicion_inducir_aux(Transicion *t, int sim, int estado,int *estados_accesibles, int *num);
 
 /** Funciones */
 
@@ -280,19 +283,24 @@ void transicion_print(FILE *f, Transicion *transicion)
 }
 
 void transicion_inducir(Transicion * t) {
-	int i;
+	int i, j, sim, num;
+	int estados_accesibles[t->nest * t->nest];
+	int *estados_actualizados = NULL;
+
+	sim = mapear_simbolo(t, LAMBDA);
+
 
 	if (!t) {
 		return;
 	}
 
-	for (i = 0; i < t->nest; i++) {
-		//Mirar si el estado tiene lambdas
-		if () {
-			//Mirar si alguno de los est accesibles por lambdas tiene lambdas
-
+	for (i = 0; i < t->nest; i++){
+		estados_actualizados = transicion_inducir_aux(t, sim, i, estados_accesibles ,&num);
+		for (j = 0; j < num; j ++){
+			if (i != estados_actualizados[j]){
+				t->transiciones[sim][i][estados_actualizados[j]] = EXISTE;
+			}
 		}
-
 
 	}
 
@@ -300,6 +308,35 @@ void transicion_inducir(Transicion * t) {
 }
 
 /* --------------------- FUNCIONES PRIVADAS ---------------------- */
+
+//Da todas las transiciones lambda del estado
+int * transicion_inducir_aux(Transicion *t, int sim, int estado,int *estados_accesibles, int *num){
+	int i = 0,pos = 0, j;
+
+
+	if (!t){
+		return NULL;
+	}
+
+	//Metemos el estado que nos pasan como argumento
+	estados_accesibles[0] = estado;
+	pos += 1;
+
+	while (i < pos){
+
+		for (j = 0; j < t->nest; j++){
+			if (t->transiciones[sim][estados_accesibles[i]][j] == EXISTE && estados_accesibles[i] != j){
+				estados_accesibles[pos] = j;
+				pos += 1;
+			}
+		}
+		i += 1;
+	}
+
+	*(num) = pos;
+
+	return estados_accesibles;
+}
 
 int mapear_simbolo(Transicion *t, char *sim)
 {

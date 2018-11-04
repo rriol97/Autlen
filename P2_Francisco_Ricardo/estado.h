@@ -39,7 +39,7 @@ char *get_name_estado(Estado *estado);
 TIPO get_tipo_estado(Estado *estado);
 
 /** Obtenemos el  identificador de estado*/
-TIPO estado_get_id(Estado *estado);
+int estado_get_id(Estado *estado);
 
 /** Función que nos facilitará la impresión de un estado*/
 void print_estado(FILE *f, Estado *estado);

@@ -98,7 +98,7 @@ args:
     -afnd: automata a modificar
 retorno: -
 */
-void AFNDInicializaEstado(AFND *afnd);
+AFND *AFNDInicializaEstado(AFND *afnd);
 
 /* 
 nombre: AFNDImprimeCadenaActual

@@ -25,13 +25,14 @@ EXEC_SOURCES = $(shell grep -l "^int main" $(SOURCES) | xargs)
 EXECS = $(shell echo $(EXEC_SOURCES) | sed -e 's:\.c[p]*::g')
 DEPS = $(shell echo $(SOURCES) | sed -e 's:\.c[p]*:\.d:g')
 
-all: test1 test2 test3 test4
+all: test1
 
 #maquina_estados:	afnd.o transicion.o estado.o conjunto_simbolos.o maquina_estados.o
 test1: afnd.o transicion.o estado.o conjunto_simbolos.o test1.o
-test2: afnd.o transicion.o estado.o conjunto_simbolos.o test2.o
-test3: afnd.o transicion.o estado.o conjunto_simbolos.o test3.o
-test4: afnd.o transicion.o estado.o conjunto_simbolos.o test4.o
+#test2: afnd.o transicion.o estado.o conjunto_simbolos.o test2.o
+#test3: afnd.o transicion.o estado.o conjunto_simbolos.o test3.o
+#test4: afnd.o transicion.o estado.o conjunto_simbolos.o test4.o
+
 
 # receta para hacer un .d (dependencias automaticas de tipo .h para tus .o)
 %.d : %.c
