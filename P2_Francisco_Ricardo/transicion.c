@@ -297,7 +297,11 @@ void transicion_print(AFND *afnd, FILE *f, Transicion *transicion)
 			}
 		}
 		/* Impresion separador */
-		fprintf(f, "\n\t\t------|---------------------------------------------------------\n");
+		fprintf(f, "\n\t\t------|");
+		for (j = 0; j < transicion->nest; j++) {
+			fprintf(f, "-------");
+		}
+		fprintf(f, "\n");
 		/* Impresion de cada fila, una por estado */
 		for (i = 0; i < transicion->nest; i++)
 		{
