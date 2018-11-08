@@ -158,3 +158,5 @@ args:
 retorno: estado encontrado o NULL si no se encuentra
 */
 Estado *get_estado_from_name(AFND *afnd, char *name);
+
+int sin_repetidos(int *actuales_aux, int id_aux, int tam);

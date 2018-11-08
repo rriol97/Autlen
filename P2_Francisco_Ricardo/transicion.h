@@ -15,7 +15,7 @@ Módulo que implementa el TAD Transicion.
 #define EXISTE 1
 #define ERR -1
 #define NO_INI -2
-#define LAMBDA "l"
+#define LAMBDA "λ"
 #define ANCHO 6
 
 #define TAM 64 // tamano maximo para nombres de simbolos y estados

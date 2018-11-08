@@ -390,8 +390,11 @@ int *transicion_inducir_aux(Transicion *t, int sim, int estado, int *estados_acc
 		{
 			if (t->transiciones[sim][estados_accesibles[i]][j] == EXISTE && estados_accesibles[i] != j)
 			{
-				estados_accesibles[pos] = j;
-				pos += 1;
+				if (sin_repetidos(estados_accesibles, j, pos) == TRUE) {
+					estados_accesibles[pos] = j;
+					pos += 1;
+				}
+				
 			}
 		}
 		i += 1;
