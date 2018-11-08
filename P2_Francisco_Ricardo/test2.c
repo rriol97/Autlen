@@ -2,7 +2,7 @@
 File: test2.c
 Authors: Ricardo Riol gonzalez, Francisco de Vicente Lana
 
-Main de pruebas numero 2, un ejemplo simple de clase de teoria
+Main de pruebas numero 2, un ejemplo simple de clase de teoria.
 =================================================================== */
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,8 +39,6 @@ int main(int argc, char **argv)
 
     /** DEFINICIÓN DE LAS TRANSICIONES LAMBDA*/
     AFNDInsertaLTransicion(p_afnd, "q2", "q1");
-
-    //AFNDImprime(stdout, p_afnd);
 
     /** INDUCIMOS EL RESTO DE TRANSICIONES LAMBDA*/
     AFNDCierraLTransicion(p_afnd);

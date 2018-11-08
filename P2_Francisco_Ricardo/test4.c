@@ -3,7 +3,7 @@ File: test4.c
 Authors: Ricardo Riol gonzalez, Francisco de Vicente Lana
 
 Main de pruebas numero 4, el cual muestra un automata con un estado a
-la vez inicial y final. Sacado de clase de teoria
+la vez inicial y final. Sacado de clase de teoria.
 =================================================================== */
 #include <stdio.h>
 #include <stdlib.h>

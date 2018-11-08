@@ -42,4 +42,8 @@ void transicion_print(AFND *afnd, FILE *f, Transicion *transicion);
 /**Induce transiciones por transitividad*/
 void transicion_inducir(Transicion * t);
 
+/**Incluye los nombres de estados si no lo estaban y devuleve su posicion dentro 
+ * del array en caso de que ya estuvieran*/
+int mapear_estado(Transicion *t, char *est);
+
 #endif

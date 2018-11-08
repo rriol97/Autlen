@@ -3,7 +3,7 @@ File: test3.c
 Authors: Ricardo Riol gonzalez, Francisco de Vicente Lana
 
 Main de pruebas numero 3, un ejemplo donde se inducen lambdas por 
-reflexividad. Sacado de clase de teoria
+reflexividad. Sacado de clase de teoria.
 =================================================================== */
 #include <stdio.h>
 #include <stdlib.h>

@@ -162,6 +162,8 @@ void AFNDInsertaEstado(AFND *afnd, char *nombre, int tipo)
         return;
     }
 
+    mapear_estado(afnd->trans, nombre);
+
     afnd->estados[afnd->idEstados] = estado_create(nombre, tipo, afnd->idEstados);
     afnd->idEstados++;
 
