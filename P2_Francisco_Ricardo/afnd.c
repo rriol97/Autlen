@@ -153,6 +153,8 @@ void AFNDInsertaSimbolo(AFND *afnd, char *sim)
         return;
     }
     insert_simbolo(afnd->alfabeto, sim);
+
+    mapear_simbolo(afnd->trans, sim);
 }
 
 void AFNDInsertaEstado(AFND *afnd, char *nombre, int tipo)
@@ -412,9 +414,9 @@ int AFNDProcesaEntrada(FILE *f, AFND *afnd)
         {
             fprintf(f, ", %s", get_name_estado(get_estado_from_id(afnd, afnd->id_actuales[i])));
         }
+        fprintf(f, "}\n");
     }
 
-    fprintf(f, "}\n");
     print_conjunto_simbolos(f, afnd->entrada, afnd->iteraciones);
 
     ret = FALSE;

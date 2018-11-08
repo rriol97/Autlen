@@ -15,7 +15,7 @@ Módulo que implementa el TAD Transicion.
 #define EXISTE 1
 #define ERR -1
 #define NO_INI -2
-#define LAMBDA "λ"
+#define LAMBDA "l"
 #define ANCHO 6
 
 #define TAM 64 // tamano maximo para nombres de simbolos y estados
@@ -45,5 +45,7 @@ void transicion_inducir(Transicion * t);
 /**Incluye los nombres de estados si no lo estaban y devuleve su posicion dentro 
  * del array en caso de que ya estuvieran*/
 int mapear_estado(Transicion *t, char *est);
+
+int mapear_simbolo(Transicion *t, char *sim);
 
 #endif

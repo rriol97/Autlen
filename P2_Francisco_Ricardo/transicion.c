@@ -266,6 +266,7 @@ void transicion_print(AFND *afnd, FILE *f, Transicion *transicion)
 		/* Impresion cabecera */
 		nombre = transicion->simbolos[k];
 		len = strlen(nombre) + 2;
+		
 		fprintf(f, "\n\t\t'%s'", nombre);
 		for (j = 0; j < ANCHO - len; j++) {
 			fprintf(f, " ");
@@ -393,8 +394,7 @@ int *transicion_inducir_aux(Transicion *t, int sim, int estado, int *estados_acc
 				if (sin_repetidos(estados_accesibles, j, pos) == TRUE) {
 					estados_accesibles[pos] = j;
 					pos += 1;
-				}
-				
+				}	
 			}
 		}
 		i += 1;
@@ -421,6 +421,11 @@ int mapear_simbolo(Transicion *t, char *sim)
 			return i;
 		}
 	}
+
+	if (t->nsim >= t->num_tablas) {
+		return ERR;
+	}
+
 	strcpy(t->simbolos[t->nsim], sim);
 	t->nsim++;
 
@@ -443,6 +448,11 @@ int mapear_estado(Transicion *t, char *est)
 			return i;
 		}
 	}
+	
+	if (t->nest >= t->dim_matriz) {
+		return ERR;
+	}
+
 	strcpy(t->estados[t->nest], est);
 	t->nest++;
 
