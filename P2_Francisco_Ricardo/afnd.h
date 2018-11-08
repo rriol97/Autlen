@@ -148,3 +148,13 @@ args:
 retorno: puntero a AFND
 */
 AFND * AFNDInicializaCadenaActual(AFND* afnd);
+
+/* 
+nombre: get_estado_from_name
+desc: devuelve un estado del afnd a partir de su nombre
+args:
+    -afnd: automata cuyo estado se quiere obtener
+    -name: nombre del estado en cuestion
+retorno: estado encontrado o NULL si no se encuentra
+*/
+Estado *get_estado_from_name(AFND *afnd, char *name);

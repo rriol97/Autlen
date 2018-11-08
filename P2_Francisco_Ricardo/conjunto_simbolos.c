@@ -63,7 +63,6 @@ void insert_simbolo(Conjunto_simbolos *conjunto_simbolos, char *sym)
 	/** Si es el primer simbolo */
 	if (conjunto_simbolos->nsym == 0)
 	{
-
 		conjunto_simbolos->simbolos = (char **)malloc(sizeof(char *));
 
 		if (!conjunto_simbolos->simbolos)
@@ -75,7 +74,6 @@ void insert_simbolo(Conjunto_simbolos *conjunto_simbolos, char *sym)
 	/**Si ya hay simbolos en el conjunto_simbolos */
 	else
 	{
-
 		conjunto_simbolos->simbolos = (char **)realloc(conjunto_simbolos->simbolos, sizeof(char *) * 2 * (conjunto_simbolos->nsym + 1));
 
 		if (!conjunto_simbolos->simbolos)
@@ -158,7 +156,6 @@ int is_in_conjunto_simbolos(Conjunto_simbolos *conjunto_simbolos, char *sym)
 
 	else
 	{
-
 		for (i = 0; i < conjunto_simbolos->nsym; i++)
 		{
 			if (strcmp(conjunto_simbolos->simbolos[i], sym) == 0)
@@ -196,7 +193,6 @@ void print_conjunto_simbolos(FILE *f, Conjunto_simbolos *conjunto_simbolos, int 
 
 	if (strcmp(conjunto_simbolos->nombre, "Cadena") == 0)
 	{
-
 		fprintf(f, "[(%d) ", conjunto_simbolos->nsym - pos);
 
 		for (simbolo = pos; simbolo < conjunto_simbolos->nsym - 1; simbolo++)

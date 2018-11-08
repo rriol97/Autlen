@@ -132,6 +132,40 @@ int estado_get_id(Estado *estado)
 	return estado->id;
 }
 
+char* estado_get_formatted_name(Estado * est)
+{
+	char *ret, *aux;
+	if (!est) {
+		return NULL;
+	}
+
+	aux = (char *)malloc(sizeof(char) * (strlen(est->nombre) + 3));
+	ret = (char *)malloc(sizeof(char) * (strlen(est->nombre) + 3));
+	if (!ret) {
+		return NULL;
+	}
+
+	strcpy(aux, "->");
+	strcpy(ret, est->nombre);
+
+	if (est->tipo == FINAL) {
+		strcat(ret, "*");
+	} else if (est->tipo == INICIAL) {
+		strcat(aux, ret);
+		strcpy(ret, aux);
+	} else if (est->tipo == INICIAL_y_FINAL) {
+		strcat(aux, ret);
+		strcpy(ret, aux);
+		strcat(ret, "*");
+	}
+
+	free(aux);
+
+	printf("%s", ret);
+
+	return ret;
+}
+
 /*Funcion que compara dos estados: devuelve 1 si son iguales y 0 en caso contrario**/
 int estado_equal(Estado *estado1, Estado *estado2)
 {

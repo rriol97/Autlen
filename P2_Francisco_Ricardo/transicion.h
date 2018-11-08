@@ -9,14 +9,16 @@ Módulo que implementa el TAD Transicion.
 #define TRANSICION_H
 
 #include "estado.h"
+#include "afnd.h"
 
 #define NO_EXISTE 0
 #define EXISTE 1
 #define ERR -1
 #define NO_INI -2
 #define LAMBDA "l"
+#define ANCHO 6
 
-#define TAM 32 // tamano maximo para nombres de simbolos y estados
+#define TAM 64 // tamano maximo para nombres de simbolos y estados
 
 typedef struct _Transicion Transicion;
 
@@ -35,7 +37,7 @@ int get_valor_transicion(Transicion *transicion, char *simbolo, char *estado1, c
 void set_valor_transicion(Transicion *transicion, char *simbolo, char *estado1, char *estado2);
 
 /**Imprimir tabla de simbolos*/
-void transicion_print(FILE *f, Transicion *transicion);
+void transicion_print(AFND *afnd, FILE *f, Transicion *transicion);
 
 /**Induce transiciones por transitividad*/
 void transicion_inducir(Transicion * t);

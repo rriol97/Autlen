@@ -1,6 +1,6 @@
 /* ===================================================================
 File: transicion.h
-Authors: Ricardo Riol, Francisco de Vicente Lana
+Authors: Ricardo Riol gonzalez, Francisco de Vicente Lana
 
 Main de pruebas numero 1. Se trata del proporcionado en el enunciado
 =================================================================== */
@@ -14,9 +14,11 @@ int main(int argc, char **argv)
 {
 	/* DECLARACIÓN DE UN PUNTERO A UN AFND */
 	AFND *p_afnd;
-	/* INICIALIZACIÓN DE UN NUEVO AFND DE NOMBRE af1 Y CON 3 ESTADOS Y 2 SÍMBOLOS EN
-SU ALFABETO */
+
+	/* INICIALIZACIÓN DE UN NUEVO AFND DE NOMBRE afl1 Y CON 8 ESTADOS Y 
+    2 SÍMBOLOS EN SU ALFABETO */
 	p_afnd = AFNDNuevo("afl1", 8, 2);
+
 	/* DEFINICIÓN DEL ALFABETO DEL AFND */
 	AFNDInsertaSimbolo(p_afnd, "0");
 	AFNDInsertaSimbolo(p_afnd, "1");
@@ -46,16 +48,16 @@ SU ALFABETO */
     AFNDInsertaLTransicion(p_afnd, "q1", "q2");
     AFNDInsertaLTransicion(p_afnd, "q4", "q2");
 
-    AFNDImprime(stdout, p_afnd);
+    //AFNDImprime(stdout, p_afnd);
 
-     /** INDUCIMOS EL RESTO DE TRANSICIONES LAMBDA*/
+    /** INDUCIMOS EL RESTO DE TRANSICIONES LAMBDA*/
     AFNDCierraLTransicion(p_afnd);
 
     /* SE MUESTRA EL AFND DEFINIDO */
 	AFNDImprime(stdout, p_afnd);
 
 
-	/* DEFINICIÓN DE LA CADENA DE ENTRADA [ 0 1 0 1 1 ] */
+	/* DEFINICIÓN DE LA CADENA DE ENTRADA [ 1 1 1 1 0 0 ] */
     AFNDInsertaLetra(p_afnd,"1");
     AFNDInsertaLetra(p_afnd,"1");
     AFNDInsertaLetra(p_afnd,"1");
@@ -73,9 +75,9 @@ SU ALFABETO */
 
 	AFNDProcesaEntrada(stdout, p_afnd);
 
-// /*********************************************************************************/
+/*********************************************************************************/
 
-	/**INTRODUCIMOS NUEVA CADENA DE ENTRADA*/
+	/**INTRODUCIMOS NUEVA CADENA DE ENTRADA [ 1 0 0 0 0 0 0 ] */
 	p_afnd = AFNDInicializaCadenaActual(p_afnd);
 
     AFNDInsertaLetra(p_afnd,"1");
@@ -86,17 +88,15 @@ SU ALFABETO */
     AFNDInsertaLetra(p_afnd,"0");
     AFNDInsertaLetra(p_afnd,"0");
 
-	/* SE ESTABLECE COMO ESTADO ACTUAL DEL AUTÓMATA EL INICIAL */
 	p_afnd = AFNDInicializaEstado(p_afnd);
 
-	/* SE MUESTRA LA CADENA ACTUAL */
 	fprintf(stdout, "\n**************** PROCESA CADENA *************\n");
 	AFNDProcesaEntrada(stdout, p_afnd);
 	fprintf(stdout, "\n*********************************************\n");
 
 /*********************************************************************************/
 
-	/**NUEVA CADENA DE ENTRADA*/
+	/**NUEVA CADENA DE ENTRADA [ 1 1 0 0 0 ] */
 	p_afnd = AFNDInicializaCadenaActual(p_afnd);
     AFNDInsertaLetra(p_afnd,"1");
     AFNDInsertaLetra(p_afnd,"1");
@@ -111,8 +111,9 @@ SU ALFABETO */
     fprintf(stdout,"\n*********************************************\n");
 
 
-// /*********************************************************************************/
+/*********************************************************************************/
 
+    /**NUEVA CADENA DE ENTRADA [ 0 1 0 1 0 1 0 1 ]*/
     p_afnd = AFNDInicializaCadenaActual(p_afnd);
     AFNDInsertaLetra(p_afnd,"0");
     AFNDInsertaLetra(p_afnd,"1");
@@ -130,9 +131,10 @@ SU ALFABETO */
     fprintf(stdout,"\n*********************************************\n");
 
 
-// // /*********************************************************************************/
+/*********************************************************************************/
 
 	/* SE LIBERAN TODOS LOS RECURSOS ASOCIADOS CON EL AFND */
 	AFNDElimina(p_afnd);
-	return 0;
+
+	return EXIT_SUCCESS;
 }

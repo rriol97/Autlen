@@ -18,14 +18,12 @@ struct _Transicion
 	int nest;
 	char **simbolos;
 	char **estados;
-
-
 };
 
 /* Declaracion funciones privadas */
 int mapear_estado(Transicion *t, char *est);
 int mapear_simbolo(Transicion *t, char *sim);
-int * transicion_inducir_aux(Transicion *t, int sim, int estado,int *estados_accesibles, int *num);
+int *transicion_inducir_aux(Transicion *t, int sim, int estado, int *estados_accesibles, int *num);
 
 /** Funciones */
 
@@ -247,9 +245,11 @@ void set_valor_transicion(Transicion *trans, char *simbolo, char *estado1, char 
 }
 
 /**Imprimir tabla de simbolos*/
-void transicion_print(FILE *f, Transicion *transicion)
+void transicion_print(AFND *afnd, FILE *f, Transicion *transicion)
 {
 	int i, j, k;
+	int tipo, len;
+	char *nombre;
 
 	if (!f || !transicion)
 	{
@@ -260,20 +260,74 @@ void transicion_print(FILE *f, Transicion *transicion)
 		fprintf(f, "-\n");
 	}
 
+	/* Impresion de cada tabla, una por simbolo */
 	for (k = 0; k < transicion->nsim; k++)
 	{
-		fprintf(f, "\n\t\t'%s'|", transicion->simbolos[k]);
-		for (i = 0; i < transicion->nest; i++)
-		{
-			fprintf(f, " %s", transicion->estados[i]);
+		/* Impresion cabecera */
+		nombre = transicion->simbolos[k];
+		len = strlen(nombre) + 2;
+		fprintf(f, "\n\t\t'%s'", nombre);
+		for (j = 0; j < ANCHO - len; j++) {
+			fprintf(f, " ");
 		}
-		fprintf(f, "\n\t\t---|------------\n");
+		fprintf(f, "|");
 		for (i = 0; i < transicion->nest; i++)
 		{
-			fprintf(f, "\t\t%s | ", transicion->estados[i]);
+			fprintf(f, " ");
+			nombre = transicion->estados[i];
+			len = strlen(nombre);
+			tipo = get_tipo_estado(get_estado_from_name(afnd, nombre));
+			if (tipo == INICIAL || tipo == INICIAL_y_FINAL) {
+				fprintf(f, "->");
+				len += 2;
+			}
+
+			if (len < 6) {
+				fprintf(f, "%s", nombre);
+			} else {
+				fprintf(f, "%.3s", nombre);
+				len -= strlen(nombre) - 3;
+			}
+			if (tipo == FINAL || tipo == INICIAL_y_FINAL) {
+				fprintf(f, "*");
+				len++;
+			}
+			for (j = 0; j < ANCHO - len; j++) {
+				fprintf(f, " ");
+			}
+		}
+		/* Impresion separador */
+		fprintf(f, "\n\t\t------|---------------------------------------------------------\n");
+		/* Impresion de cada fila, una por estado */
+		for (i = 0; i < transicion->nest; i++)
+		{
+			nombre = transicion->estados[i];
+			len = strlen(nombre);
+			tipo = get_tipo_estado(get_estado_from_name(afnd, nombre));
+
+			fprintf(f, "\t\t");
+			if (tipo == INICIAL || tipo == INICIAL_y_FINAL) {
+				fprintf(f, "->");
+				len += 2;
+			}
+			if (len < 6) {
+				fprintf(f, "%s", nombre);
+			} else {
+				fprintf(f, "%.3s", nombre);
+				len -= strlen(nombre) - 3;
+			}
+			if (tipo == FINAL || tipo == INICIAL_y_FINAL) {
+				fprintf(f, "*");
+				len++;
+			}
+			for (j = 0; j < ANCHO - len; j++) {
+				fprintf(f, " ");
+			}
+			fprintf(f, "|");
+
 			for (j = 0; j < transicion->nest; j++)
 			{
-				fprintf(f, " %d ", transicion->transiciones[k][i][j]);
+				fprintf(f, "  %d    ", transicion->transiciones[k][i][j]);
 			}
 			fprintf(f, "\n");
 		}
@@ -282,26 +336,29 @@ void transicion_print(FILE *f, Transicion *transicion)
 	return;
 }
 
-void transicion_inducir(Transicion * t) {
+void transicion_inducir(Transicion *t)
+{
 	int i, j, sim, num;
 	int estados_accesibles[t->nest * t->nest];
 	int *estados_actualizados = NULL;
 
 	sim = mapear_simbolo(t, LAMBDA);
 
-
-	if (!t) {
+	if (!t)
+	{
 		return;
 	}
 
-	for (i = 0; i < t->nest; i++){
-		estados_actualizados = transicion_inducir_aux(t, sim, i, estados_accesibles ,&num);
-		for (j = 0; j < num; j ++){
-			if (i != estados_actualizados[j]){
+	for (i = 0; i < t->nest; i++)
+	{
+		estados_actualizados = transicion_inducir_aux(t, sim, i, estados_accesibles, &num);
+		for (j = 0; j < num; j++)
+		{
+			if (i != estados_actualizados[j])
+			{
 				t->transiciones[sim][i][estados_actualizados[j]] = EXISTE;
 			}
 		}
-
 	}
 
 	return;
@@ -310,11 +367,12 @@ void transicion_inducir(Transicion * t) {
 /* --------------------- FUNCIONES PRIVADAS ---------------------- */
 
 //Da todas las transiciones lambda del estado
-int * transicion_inducir_aux(Transicion *t, int sim, int estado,int *estados_accesibles, int *num){
-	int i = 0,pos = 0, j;
+int *transicion_inducir_aux(Transicion *t, int sim, int estado, int *estados_accesibles, int *num)
+{
+	int i = 0, pos = 0, j;
 
-
-	if (!t){
+	if (!t)
+	{
 		return NULL;
 	}
 
@@ -322,10 +380,12 @@ int * transicion_inducir_aux(Transicion *t, int sim, int estado,int *estados_acc
 	estados_accesibles[0] = estado;
 	pos += 1;
 
-	while (i < pos){
-
-		for (j = 0; j < t->nest; j++){
-			if (t->transiciones[sim][estados_accesibles[i]][j] == EXISTE && estados_accesibles[i] != j){
+	while (i < pos)
+	{
+		for (j = 0; j < t->nest; j++)
+		{
+			if (t->transiciones[sim][estados_accesibles[i]][j] == EXISTE && estados_accesibles[i] != j)
+			{
 				estados_accesibles[pos] = j;
 				pos += 1;
 			}
