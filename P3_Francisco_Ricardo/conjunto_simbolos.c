@@ -225,3 +225,11 @@ void print_conjunto_simbolos(FILE *f, Conjunto_simbolos *conjunto_simbolos, int 
 
 	return;
 }
+
+
+char* getSimByIndex(Conjunto_simbolos* alfabeto, int i) {
+	if (!alfabeto || i < 0 || i > alfabeto->nsym) {
+		return NULL;
+	}
+	return alfabeto->simbolos[i];
+}

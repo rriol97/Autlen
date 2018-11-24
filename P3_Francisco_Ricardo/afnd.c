@@ -30,6 +30,7 @@ Estado *get_estado_from_id(AFND *afnd, int id);
 int algun_actual_final(AFND *afnd);
 void resetear_actuales(AFND *afnd, int *ids);
 int sin_repetidos(int *actuales_aux, int id_aux, int tam);
+void AFND_clonar(AFND* clon, AFND* afnd);
 
 /** Funciones del AFND */
 AFND *AFNDNuevo(char *nombre, int nest, int nsim)
@@ -37,7 +38,7 @@ AFND *AFNDNuevo(char *nombre, int nest, int nsim)
     AFND *afnd = NULL;
     int i;
 
-    if (!nombre || nest < 1 || nsim < 1)
+    if (!nombre || nest < 1 || nsim < 0)
     {
         return NULL;
     }
@@ -579,4 +580,111 @@ void resetear_actuales(AFND *afnd, int *ids)
     }
 
     return;
+}
+
+/* FUNCIONALIDAD P3 ====================================================== */
+
+AFND* AFND1ODeSimbolo(char* sim) {
+    char nombreAFND[MAX];
+
+    /* DECLARACIÓN DE UN PUNTERO A UN AFND */
+    AFND *p_afnd;
+
+    if (!sim) { /* VACIO */
+        sprintf(nombreAFND, "afnd_vacio");
+        p_afnd = AFNDNuevo(nombreAFND, NEST_VACIO, NSIM_VACIO);
+
+        /* DEFINICIÓN DEL CONJUNTO DE ESTADOS */
+        AFNDInsertaEstado(p_afnd, "q", INICIAL_y_FINAL);
+        
+    } else { /* BASICO */
+        sprintf(nombreAFND, "afnd_%s", sim);
+        p_afnd = AFNDNuevo(nombreAFND, NEST_BASICO, NSIM_BASICO);
+
+        /* DEFINICIÓN DEL ALFABETO DEL AFND */
+        AFNDInsertaSimbolo(p_afnd, sim);
+
+        /* DEFINICIÓN DEL CONJUNTO DE ESTADOS */
+        AFNDInsertaEstado(p_afnd, "q0", INICIAL);
+        AFNDInsertaEstado(p_afnd, "qf", FINAL);
+
+        /* DEFINICIÓN DE LAS TRANSICIONES NO LAMBDA */
+        AFNDInsertaTransicion(p_afnd, "q0", sim, "qf");
+    }
+
+    return p_afnd;
+}
+
+AFND* AFND1OUne(AFND* afnd1, AFND* afnd2) {
+    AFND* p_afnd;
+    char nombreAFND[MAX];
+    int nest, nsim;
+
+    if (!afnd1 || !afnd2) {
+        return NULL;
+    }
+
+    sprintf(nombreAFND, "union_%s_%s", afnd1->nombre, afnd2->nombre);
+    nest = afnd1->nest + afnd2->nest + 2;
+    nsim = afnd1->nsim + afnd2->nsim;
+
+    p_afnd = AFNDNuevo(nombreAFND, nest, nsim);
+
+    AFND_clonar(p_afnd, afnd1);
+    AFND_clonar(p_afnd, afnd2);
+
+    return p_afnd;
+}
+
+AFND* AFND1OConcatena(AFND* afnd1, AFND* afnd2) {
+    AFND* p_afnd;
+    char nombreAFND[MAX];
+
+    if (!afnd1 || !afnd2) {
+        return NULL;
+    }
+
+    sprintf(nombreAFND, "concatenacion_%s_%s", afnd1->nombre, afnd2->nombre);
+    p_afnd = AFNDNuevo(nombreAFND, NEST_BASICO, NSIM_VACIO);
+    
+
+    return p_afnd;
+}
+
+AFND* AFND1OEstrella(AFND* afnd) {
+    AFND* p_afnd;
+    char nombreAFND[MAX];
+
+    if (!afnd) {
+        return NULL;
+    }
+
+    sprintf(nombreAFND, "estrella_%s", afnd->nombre);
+    p_afnd = AFNDNuevo(nombreAFND, NEST_BASICO, NSIM_VACIO);
+
+
+    return p_afnd;
+}
+
+void AFND_clonar(AFND* clon, AFND* afnd) {
+    char nombreAux[MAX];
+    int i;
+
+    if (!clon || !afnd) {
+        return;
+    }
+
+    for (i = 0; i < afnd->nsim; i++) { /* Copia alfabeto */
+        sprintf(nombreAux, "%s_%s", getSimByIndex(afnd->alfabeto, i), afnd->nombre);
+        AFNDInsertaSimbolo(clon, nombreAux);
+    }
+    
+    for (i = 0; i < afnd->nest; i++) { /* Copia conjunto estados */
+        sprintf(nombreAux, "%s_%s", get_name_estado(afnd->estados[i]), afnd->nombre);
+        // Estados normales para la union, mantener para estrella, movida para concat
+        AFNDInsertaEstado(clon, nombreAux, get_tipo_estado(afnd->estados[i]));
+    }
+
+    /* Copia conjunto de transiciones */
+    copiar_transiciones(clon->trans, afnd->trans, afnd->nombre);
 }

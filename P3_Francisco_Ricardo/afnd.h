@@ -15,6 +15,12 @@ Modulo que define el TAD automata finito no determinista.
 #define SIN_INICIALIZAR -1
 #define TRUE 1
 #define FALSE 0
+#define NEST_BASICO 2
+#define NEST_VACIO 1
+#define NSIM_BASICO 1
+#define NSIM_VACIO 0
+
+#define MAX 64
 
 typedef struct _AFND AFND;
 
@@ -169,3 +175,19 @@ args:
 retorno: FALSE si id_aux esta en actuales_aux, TRUE en caso contrario
 */
 int sin_repetidos(int *actuales_aux, int id_aux, int tam);
+
+/* -------------- Funciones para la P3 ------------------- */
+
+/* 
+nombre: AFND1ODeSimbolo
+desc: crea un automata basico que reconozco un unico simbolo
+args:
+    -sim: simbolo a reconocer
+retorno: afnd creado, NULL en caso de error
+*/
+AFND* AFND1ODeSimbolo(char* sim);
+
+
+AFND* AFND1OUne(AFND* afnd1, AFND* afnd2);
+AFND* AFND1OConcatena(AFND* afnd1, AFND* afnd2);
+AFND* AFND1OEstrella(AFND* afnd);

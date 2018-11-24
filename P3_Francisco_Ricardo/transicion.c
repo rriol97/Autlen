@@ -474,3 +474,25 @@ int mapear_estado(Transicion *t, char *est)
 
 	return t->nest - 1;
 }
+
+void copiar_transiciones(Transicion *t_clon, Transicion *t_afnd, char *ext) {
+	int i, j, k;
+	char sim[MAX], q0[MAX], qf[MAX];
+
+	for (i = 0; i < t_afnd->num_tablas; i++) {
+		for (j = 0; j < t_afnd->dim_matriz; j++) {
+			for (k = 0; k < t_afnd->dim_matriz; k++) {
+				printf("Debug:\n\tSIMBOLO(%d): %s\n\tQ0(%d): %s\n\tQF(%d): %s\n", i, t_afnd->simbolos[i], j, t_afnd->estados[j], k, t_afnd->estados[k]);
+				if (t_afnd->transiciones[i][j][k] == EXISTE) {
+					sprintf(sim, "%s_%s", t_afnd->simbolos[i], ext);
+					sprintf(q0, "%s_%s", t_afnd->estados[j], ext);
+					sprintf(qf, "%s_%s", t_afnd->estados[k], ext);
+
+					set_valor_transicion(t_clon, sim, q0, qf);
+				}
+			}
+		}
+	}
+
+	return;	
+}
