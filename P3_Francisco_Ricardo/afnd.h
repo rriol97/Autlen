@@ -191,3 +191,6 @@ AFND* AFND1ODeSimbolo(char* sim);
 AFND* AFND1OUne(AFND* afnd1, AFND* afnd2);
 AFND* AFND1OConcatena(AFND* afnd1, AFND* afnd2);
 AFND* AFND1OEstrella(AFND* afnd);
+
+/* Combierte afnd a la especificacion 1O */
+AFND * AFNDAAFND1O(AFND * p_afnd);
