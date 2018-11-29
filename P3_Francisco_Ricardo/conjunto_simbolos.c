@@ -54,9 +54,16 @@ Conjunto_simbolos *conjunto_simbolos_create(char *nombre)
 /** Insertamos u síbolo nuevo en el conjunto_simbolos*/
 void insert_simbolo(Conjunto_simbolos *conjunto_simbolos, char *sym)
 {
+	int i;
 	if (!conjunto_simbolos || !sym)
 	{
 		return;
+	}
+
+	for ( i = 0; i < conjunto_simbolos->nsym; i++) {
+		if (!strcmp(sym, conjunto_simbolos->simbolos[i])) {
+			return;
+		}
 	}
 
 	/** Si es el primer simbolo */
@@ -232,4 +239,26 @@ char* getSimByIndex(Conjunto_simbolos* alfabeto, int i) {
 		return NULL;
 	}
 	return alfabeto->simbolos[i];
+}
+
+int nsim_union(Conjunto_simbolos *c1, Conjunto_simbolos *c2) {
+	int i, j, cont, flag;
+	if (!c1 || !c2) {
+		return -1;
+	}
+
+	cont = c1->nsym;
+	for (i = 0; i < c2->nsym; i++) {
+		flag = 0;
+		for (j = 0; j < c1->nsym; j++) {
+			if (!strcmp(c2->simbolos[i], c1->simbolos[j])) {
+				flag = 1;
+				break;
+			}
+		}
+		if (flag == 0) {
+			cont++;
+		}
+	}
+	return cont;
 }

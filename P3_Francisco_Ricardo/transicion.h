@@ -47,6 +47,6 @@ int mapear_estado(Transicion *t, char *est);
 
 int mapear_simbolo(Transicion *t, char *sim);
 
-void copiar_transiciones(Transicion *t_clon, Transicion *t_afnd, char *ext);
+void copiar_transiciones(Transicion *t_clon, Transicion *t_afnd);
 
 #endif

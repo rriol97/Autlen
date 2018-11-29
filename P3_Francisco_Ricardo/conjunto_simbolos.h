@@ -42,4 +42,6 @@ void print_conjunto_simbolos(FILE *f, Conjunto_simbolos *conjunto_simbolos, int 
 
 char* getSimByIndex(Conjunto_simbolos* alfabeto, int i);
 
+int nsim_union(Conjunto_simbolos *c1, Conjunto_simbolos *c2);
+
 #endif

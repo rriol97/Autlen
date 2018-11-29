@@ -627,8 +627,8 @@ AFND* AFND1OUne(AFND* afnd1, AFND* afnd2) {
 
     sprintf(nombreAFND, "union_%s_%s", afnd1->nombre, afnd2->nombre);
     nest = afnd1->nest + afnd2->nest + 2;
-    // TODO: ver repetidos
-    nsim = afnd1->nsim + afnd2->nsim;
+    nsim = nsim_union(afnd1->alfabeto, afnd2->alfabeto);
+    printf("Valor de la union: %d\n", nsim);
 
     p_afnd = AFNDNuevo(nombreAFND, nest, nsim);
 
@@ -639,10 +639,9 @@ AFND* AFND1OUne(AFND* afnd1, AFND* afnd2) {
     AFNDInsertaEstado(p_afnd, nombreFin, FINAL);
 
     /* Inclusion del primer afnd */
-
     for (i = 0; i < afnd1->nsim; i++) { /* Copia alfabeto */
     // TODO: dejar el mismo simbolo teniendo en cuenta repes
-        sprintf(nombreAux, "%s_%s", getSimByIndex(afnd1->alfabeto, i), afnd1->nombre);
+        sprintf(nombreAux, "%s", getSimByIndex(afnd1->alfabeto, i));
         AFNDInsertaSimbolo(p_afnd, nombreAux);
     }
     for (i = 0; i < afnd1->nest; i++) { /* Copia conjunto estados */
@@ -660,13 +659,11 @@ AFND* AFND1OUne(AFND* afnd1, AFND* afnd2) {
         }
     }
     /* Copia conjunto de transiciones */
-    copiar_transiciones(p_afnd->trans, afnd1->trans, afnd1->nombre);
-
+    copiar_transiciones(p_afnd->trans, afnd1->trans);
 
     /* Inclusion del segundo andf */
-
     for (i = 0; i < afnd2->nsim; i++) { /* Copia alfabeto */
-        sprintf(nombreAux, "%s_%s", getSimByIndex(afnd2->alfabeto, i), afnd2->nombre);
+        sprintf(nombreAux, "%s", getSimByIndex(afnd2->alfabeto, i));
         AFNDInsertaSimbolo(p_afnd, nombreAux);
     }
     for (i = 0; i < afnd2->nest; i++) { /* Copia conjunto estados */
@@ -684,7 +681,7 @@ AFND* AFND1OUne(AFND* afnd1, AFND* afnd2) {
         }
     }
     /* Copia conjunto de transiciones */
-    copiar_transiciones(p_afnd->trans, afnd2->trans, afnd2->nombre);
+    copiar_transiciones(p_afnd->trans, afnd2->trans);
 
     return p_afnd;
 }
@@ -692,14 +689,64 @@ AFND* AFND1OUne(AFND* afnd1, AFND* afnd2) {
 AFND* AFND1OConcatena(AFND* afnd1, AFND* afnd2) {
     AFND* p_afnd;
     char nombreAFND[MAX];
+    char nombreAux[MAX], nombreFinalA1[MAX];
+    int nest, nsim;
+    int i;
 
     if (!afnd1 || !afnd2) {
         return NULL;
     }
 
     sprintf(nombreAFND, "concatenacion_%s_%s", afnd1->nombre, afnd2->nombre);
-    p_afnd = AFNDNuevo(nombreAFND, NEST_BASICO, NSIM_VACIO);
-    
+    nest = afnd1->nest + afnd2->nest;
+    // TODO: ver repetidos
+    nsim = nsim_union(afnd1->alfabeto, afnd2->alfabeto);
+
+    p_afnd = AFNDNuevo(nombreAFND, nest, nsim);
+
+    /* Inclusion del primer afnd */
+    for (i = 0; i < afnd1->nsim; i++) { /* Copia alfabeto */
+    // TODO: dejar el mismo simbolo teniendo en cuenta repes
+        sprintf(nombreAux, "%s", getSimByIndex(afnd1->alfabeto, i));
+        AFNDInsertaSimbolo(p_afnd, nombreAux);
+    }
+    for (i = 0; i < afnd1->nest; i++) { /* Copia conjunto estados */
+        sprintf(nombreAux, "%s_%s", get_name_estado(afnd1->estados[i]), afnd1->nombre);
+        // Estados normales para la union, mantener para estrella, movida para concat
+        if (get_tipo_estado(afnd1->estados[i]) == INICIAL) {
+            AFNDInsertaEstado(p_afnd, nombreAux, INICIAL);
+        } else if (get_tipo_estado(afnd1->estados[i]) == FINAL) {
+            AFNDInsertaEstado(p_afnd, nombreAux, NORMAL);
+            //AFNDInsertaLTransicion(p_afnd, nombreAux, /**/);
+            strcpy(nombreFinalA1, nombreAux);
+        } else if (get_tipo_estado(afnd1->estados[i]) == INICIAL_y_FINAL) {
+            AFNDInsertaEstado(p_afnd, nombreAux, INICIAL);
+            strcpy(nombreFinalA1, nombreAux);
+        }
+    }
+    /* Copia conjunto de transiciones */
+    copiar_transiciones(p_afnd->trans, afnd1->trans);
+
+    /* Inclusion del segundo andf */
+    for (i = 0; i < afnd2->nsim; i++) { /* Copia alfabeto */
+        sprintf(nombreAux, "%s", getSimByIndex(afnd2->alfabeto, i));
+        AFNDInsertaSimbolo(p_afnd, nombreAux);
+    }
+    for (i = 0; i < afnd2->nest; i++) { /* Copia conjunto estados */
+        sprintf(nombreAux, "%s_%s", get_name_estado(afnd2->estados[i]), afnd2->nombre);
+
+        if (get_tipo_estado(afnd2->estados[i]) == INICIAL) {
+            AFNDInsertaEstado(p_afnd, nombreAux, NORMAL);
+            AFNDInsertaLTransicion(p_afnd, nombreFinalA1, nombreAux);
+        } else if (get_tipo_estado(afnd2->estados[i]) == FINAL) {
+            AFNDInsertaEstado(p_afnd, nombreAux, FINAL);
+        } else if (get_tipo_estado(afnd2->estados[i]) == INICIAL_y_FINAL) {
+            AFNDInsertaLTransicion(p_afnd, nombreFinalA1, nombreAux);
+            AFNDInsertaEstado(p_afnd, nombreAux, FINAL);
+        }
+    }
+    /* Copia conjunto de transiciones */
+    copiar_transiciones(p_afnd->trans, afnd2->trans);
 
     return p_afnd;
 }
@@ -707,14 +754,52 @@ AFND* AFND1OConcatena(AFND* afnd1, AFND* afnd2) {
 AFND* AFND1OEstrella(AFND* afnd) {
     AFND* p_afnd;
     char nombreAFND[MAX];
+    char nombreAux[MAX], nombreIni[MAX], nombreFin[MAX];
+    int nest, nsim;
+    int i;
 
     if (!afnd) {
         return NULL;
     }
 
     sprintf(nombreAFND, "estrella_%s", afnd->nombre);
-    p_afnd = AFNDNuevo(nombreAFND, NEST_BASICO, NSIM_VACIO);
+    nest = afnd->nest + 2;
+    // TODO: ver repetidos
+    nsim = afnd->nsim;
 
+    p_afnd = AFNDNuevo(nombreAFND, nest, nsim);
+
+    /* Estados auxiliares para la union */
+    sprintf(nombreIni, "inicial_%s", nombreAFND);
+    AFNDInsertaEstado(p_afnd, nombreIni, INICIAL);
+    sprintf(nombreFin, "final_%s", nombreAFND);
+    AFNDInsertaEstado(p_afnd, nombreFin, FINAL);
+
+    for (i = 0; i < afnd->nsim; i++) { /* Copia alfabeto */
+    // TODO: dejar el mismo simbolo teniendo en cuenta repes
+        sprintf(nombreAux, "%s", getSimByIndex(afnd->alfabeto, i));
+        AFNDInsertaSimbolo(p_afnd, nombreAux);
+    }
+    for (i = 0; i < afnd->nest; i++) { /* Copia conjunto estados */
+        sprintf(nombreAux, "%s_%s", get_name_estado(afnd->estados[i]), afnd->nombre);
+        // Estados normales para la union, mantener para estrella, movida para concat
+        AFNDInsertaEstado(p_afnd, nombreAux, NORMAL);
+
+        if (get_tipo_estado(afnd->estados[i]) == INICIAL) {
+            AFNDInsertaLTransicion(p_afnd, nombreIni, nombreAux);
+        } else if (get_tipo_estado(afnd->estados[i]) == FINAL) {
+            AFNDInsertaLTransicion(p_afnd, nombreAux, nombreFin);
+        } else if (get_tipo_estado(afnd->estados[i]) == INICIAL_y_FINAL) {
+            AFNDInsertaLTransicion(p_afnd, nombreIni, nombreAux);
+            AFNDInsertaLTransicion(p_afnd, nombreAux, nombreFin);
+        }
+    }
+
+    AFNDInsertaLTransicion(p_afnd, nombreIni, nombreFin);
+    AFNDInsertaLTransicion(p_afnd, nombreFin, nombreIni);
+
+    /* Copia conjunto de transiciones */
+    copiar_transiciones(p_afnd->trans, afnd->trans);
 
     return p_afnd;
 }

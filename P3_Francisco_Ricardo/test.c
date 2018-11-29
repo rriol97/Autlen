@@ -13,7 +13,7 @@ Test para ir probando "sobre la marcha"
 int main(int argc, char **argv)
 {
     /* DECLARACIÓN DE UN PUNTERO A UN AFND */
-    AFND *p_afnd0, *p_afnd1, *suma, *vacio;
+    AFND *p_afnd0, *p_afnd1, *suma, *vacio, *concatena, *estrella;
 
     vacio = AFND1ODeSimbolo(NULL);
 
@@ -33,12 +33,24 @@ int main(int argc, char **argv)
     suma = AFND1OUne(p_afnd0, p_afnd1);
     AFNDImprime(stdout, suma);
 
+    printf("Concatena------------------------\n");
+    /* Concatenacino de ambos */
+    concatena = AFND1OConcatena(p_afnd0, p_afnd1);
+    AFNDImprime(stdout, concatena);
+
+    printf("Estrella------------------------\n");
+    /* Concatenacino de ambos */
+    estrella = AFND1OEstrella(p_afnd0);
+    AFNDImprime(stdout, estrella);
+
 
     /* SE LIBERAN TODOS LOS RECURSOS ASOCIADOS CON EL AFND */
     AFNDElimina(p_afnd0);
     AFNDElimina(p_afnd1);
     AFNDElimina(suma);
     AFNDElimina(vacio);
+    AFNDElimina(concatena);
+    AFNDElimina(estrella);
 
 
     return EXIT_SUCCESS;
